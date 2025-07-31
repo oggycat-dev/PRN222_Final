@@ -1,0 +1,661 @@
+/* Admin CSS - Cosmic Theme for Novel Management */
+
+:root {
+    --cosmic-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --cosmic-secondary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --cosmic-success: linear-gradient(135deg, #10ac84 0%, #1dd1a1 100%);
+    --cosmic-info: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+    --cosmic-warning: linear-gradient(135deg, #ffa801 0%, #ff6348 100%);
+    --cosmic-danger: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    --cosmic-dark: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+    --stellar-gold: #ffd700;
+    --cosmic-text: #4ecdc4;
+    --cosmic-white: #ffffff;
+    --cosmic-gray: rgba(255, 255, 255, 0.8);
+}
+
+/* Global Admin Styles */
+.cosmic-admin-section {
+    min-height: 100vh;
+    background: var(--cosmic-dark);
+    position: relative;
+    padding: 2rem 0;
+    overflow-x: hidden;
+}
+
+.cosmic-admin-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 25% 25%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 75%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(118, 75, 162, 0.05) 0%, transparent 70%);
+    z-index: 1;
+}
+
+.cosmic-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.2) 0%, transparent 50%);
+    z-index: 1;
+}
+
+.admin-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.admin-particles::before,
+.admin-particles::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--cosmic-text);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+.admin-particles::before {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.admin-particles::after {
+    top: 80%;
+    right: 10%;
+    animation-delay: 3s;
+}
+
+@@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Header Styles */
+.cosmic-admin-header {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.cosmic-header-content {
+    margin-bottom: 2rem;
+}
+
+.cosmic-admin-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.cosmic-admin-title i {
+    color: var(--cosmic-text);
+    margin-right: 1rem;
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.cosmic-admin-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 300;
+}
+
+.cosmic-header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Statistics Cards */
+.cosmic-stat-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.cosmic-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    z-index: 1;
+}
+
+.cosmic-stat-primary::before { background: var(--cosmic-primary); }
+.cosmic-stat-success::before { background: var(--cosmic-success); }
+.cosmic-stat-info::before { background: var(--cosmic-info); }
+.cosmic-stat-warning::before { background: var(--cosmic-warning); }
+
+.cosmic-stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(78, 205, 196, 0.5);
+}
+
+.cosmic-stat-content {
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cosmic-stat-info .cosmic-stat-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.cosmic-stat-info .cosmic-stat-value {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.cosmic-stat-icon {
+    color: var(--cosmic-text);
+    opacity: 0.8;
+    font-size: 3rem;
+}
+
+/* Filter Section */
+.cosmic-admin-filters {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 2;
+}
+
+.cosmic-filter-form .row {
+    align-items: end;
+}
+
+.cosmic-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.cosmic-form-label {
+    display: block;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.cosmic-form-control {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.cosmic-form-control:focus {
+    outline: none;
+    border-color: var(--cosmic-text);
+    box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.cosmic-form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+select.cosmic-form-control {
+    cursor: pointer;
+}
+
+select.cosmic-form-control option {
+    background: #1a1a2e;
+    color: white;
+    padding: 0.5rem;
+}
+
+/* Table Styles */
+.cosmic-admin-table-container {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+.cosmic-admin-table-wrapper {
+    overflow-x: auto;
+}
+
+.cosmic-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.cosmic-admin-table thead {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.cosmic-admin-table th {
+    padding: 1.5rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--cosmic-text);
+    border-bottom: 2px solid rgba(78, 205, 196, 0.3);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cosmic-admin-table td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    vertical-align: middle;
+}
+
+.cosmic-table-row {
+    transition: all 0.3s ease;
+}
+
+.cosmic-table-row:hover {
+    background: rgba(78, 205, 196, 0.1);
+    transform: scale(1.01);
+}
+
+/* Buttons */
+.cosmic-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.875rem 1.75rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-align: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.cosmic-btn-primary {
+    background: var(--cosmic-primary);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.cosmic-btn-success {
+    background: var(--cosmic-success);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.cosmic-btn-info {
+    background: var(--cosmic-info);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.cosmic-btn-warning {
+    background: var(--cosmic-warning);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.cosmic-btn-danger {
+    background: var(--cosmic-danger);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.cosmic-btn-outline {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cosmic-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    color: white;
+}
+
+.cosmic-btn-primary:hover {
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.cosmic-btn-success:hover {
+    box-shadow: 0 15px 40px rgba(16, 172, 132, 0.4);
+}
+
+.cosmic-btn-info:hover {
+    box-shadow: 0 15px 40px rgba(55, 66, 250, 0.4);
+}
+
+.cosmic-btn-warning:hover {
+    box-shadow: 0 15px 40px rgba(255, 168, 1, 0.4);
+}
+
+.cosmic-btn-danger:hover {
+    box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+}
+
+.cosmic-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--cosmic-text);
+}
+
+.btn-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+    pointer-events: none;
+}
+
+.cosmic-btn:hover .btn-glow {
+    transform: translateX(100%);
+}
+
+/* Empty State */
+.cosmic-empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.cosmic-empty-icon {
+    font-size: 4rem;
+    color: var(--cosmic-text);
+    margin-bottom: 2rem;
+    opacity: 0.7;
+}
+
+.cosmic-empty-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.cosmic-empty-text {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Date and Number Formatting */
+.cosmic-date {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+/* Status badges and category styles are already defined in the specific pages */
+
+/* Loading Animation */
+.cosmic-loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.cosmic-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(78, 205, 196, 0.3);
+    border-top: 4px solid var(--cosmic-text);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@@media (max-width: 1200px) {
+    .cosmic-admin-title {
+        font-size: 2.5rem;
+    }
+    
+    .cosmic-admin-table-wrapper {
+        overflow-x: scroll;
+    }
+}
+
+@@media (max-width: 768px) {
+    .cosmic-admin-section {
+        padding: 1rem 0;
+    }
+    
+    .cosmic-admin-title {
+        font-size: 2rem;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cosmic-admin-title i {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .cosmic-admin-filters {
+        padding: 1.5rem;
+        margin: 1rem;
+        border-radius: 15px;
+    }
+    
+    .cosmic-filter-form .row .col-md-2 {
+        margin-top: 1rem;
+    }
+    
+    .cosmic-stat-content {
+        padding: 1.5rem;
+    }
+    
+    .cosmic-stat-info .cosmic-stat-value {
+        font-size: 2rem;
+    }
+    
+    .cosmic-admin-table th,
+    .cosmic-admin-table td {
+        padding: 1rem 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .cosmic-header-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cosmic-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@@media (max-width: 576px) {
+    .cosmic-admin-title {
+        font-size: 1.8rem;
+    }
+    
+    .cosmic-admin-filters {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .cosmic-admin-table-container {
+        margin: 0.5rem;
+        border-radius: 15px;
+    }
+    
+    .cosmic-admin-table th,
+    .cosmic-admin-table td {
+        padding: 0.75rem 0.25rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Form specific styles */
+.cosmic-form-container {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 3rem;
+    backdrop-filter: blur(20px);
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Message styles */
+.cosmic-success-message {
+    background: rgba(16, 172, 132, 0.2);
+    border: 1px solid rgba(16, 172, 132, 0.5);
+    color: #1dd1a1;
+    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.cosmic-error-message {
+    background: rgba(255, 107, 107, 0.2);
+    border: 1px solid rgba(255, 107, 107, 0.5);
+    color: #ff6b6b;
+    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.cosmic-success-message i,
+.cosmic-error-message i {
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+}
+
+/* Animation Classes */
+@@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; } 

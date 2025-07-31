@@ -1,0 +1,244 @@
+@page
+@model FinalProject.Pages.Staff.DashboardModel
+@{
+    ViewData["Title"] = "Bảng điều khiển Staff";
+    Layout = "_Layout";
+}
+
+<style>
+    .staff-dashboard {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .dashboard-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .management-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .management-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .management-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .card-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .novels-icon {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .chapters-icon {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+    }
+
+    .categories-icon {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .card-description {
+        text-align: center;
+        color: #666;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .card-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #667eea;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+    }
+
+    .welcome-banner {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+        backdrop-filter: blur(10px);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .welcome-text {
+        color: white;
+        text-align: center;
+        margin: 0;
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+</style>
+
+<div class="staff-dashboard">
+    <div class="container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1><i class="fas fa-user-cog"></i> Staff Dashboard</h1>
+            <p>Manage novels, chapters, and categories efficiently</p>
+        </div>
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <p class="welcome-text">
+                <i class="fas fa-star text-warning"></i>
+                Welcome to the Staff Management Panel. You have access to manage novels, chapters, and categories.
+                Use the cards below to navigate to different management areas.
+            </p>
+        </div>
+
+        <!-- Management Cards -->
+        <div class="management-cards">
+            <!-- Novel Management -->
+            <a href="/Staff/Novels" class="management-card">
+                <div class="card-icon novels-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3 class="card-title">Novel Management</h3>
+                <p class="card-description">
+                    Create, edit, and manage novels. Update novel details, status, and metadata.
+                </p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">@Model.TotalNovels</div>
+                        <div class="stat-label">Total Novels</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Chapter Management -->
+            <a href="/Staff/NovelChapters" class="management-card">
+                <div class="card-icon chapters-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3 class="card-title">Chapter Management</h3>
+                <p class="card-description">
+                    Add new chapters, edit existing content, and manage chapter pricing and status.
+                </p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">@Model.TotalChapters</div>
+                        <div class="stat-label">Total Chapters</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Category Management -->
+            <a href="/Staff/Categories" class="management-card">
+                <div class="card-icon categories-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <h3 class="card-title">Category Management</h3>
+                <p class="card-description">
+                    Organize content with categories. Add, edit, and manage novel categorization.
+                </p>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <div class="stat-number"><i class="fas fa-infinity"></i></div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to cards on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all management cards
+    document.querySelectorAll('.management-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+});
+</script> 

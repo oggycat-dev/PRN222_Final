@@ -1,0 +1,375 @@
+@page
+@model FinalProject.Pages.Admin.CategoriesModel
+@{
+    ViewData["Title"] = "Quản lý thể loại";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Admin Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-tags text-primary"></i> Quản lý thể loại</h2>
+                    <p class="text-muted mb-0">Quản lý các thể loại tiểu thuyết</p>
+                </div>
+                <div>
+                    <a asp-page="/Admin/Dashboard" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+    }
+    
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Add Category Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-plus me-2"></i>Thêm thể loại mới
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="Add">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="mb-3">
+                                    <label asp-for="NewCategory.Name" class="form-label">Tên thể loại *</label>
+                                    <input asp-for="NewCategory.Name" class="form-control" placeholder="Nhập tên thể loại">
+                                    <span asp-validation-for="NewCategory.Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100 mb-3">
+                                    <i class="fas fa-plus me-2"></i>Thêm thể loại
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list me-2"></i>Danh sách thể loại
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Categories.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th width="60">ID</th>
+                                        <th>Tên thể loại</th>
+                                        <th width="150">Số tiểu thuyết</th>
+                                        <th width="120">Ngày tạo</th>
+                                        <th width="120">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <tr id="category-row-@category.Id">
+                                            <td>
+                                                <span class="badge bg-secondary">@category.Id</span>
+                                            </td>
+                                            <td>
+                                                <div class="category-name-container">
+                                                    <span class="fw-bold" id="name-display-@category.Id">@category.Name</span>
+                                                    <input type="text" class="form-control form-control-sm" 
+                                                           id="name-input-@category.Id" value="@category.Name" style="display: none;">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">@category.Novels.Count tiểu thuyết</span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">@category.CreatedAt.ToString("dd/MM/yyyy")</small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-warning" 
+                                                            id="edit-btn-@category.Id" 
+                                                            onclick="editCategory(@category.Id)"
+                                                            title="Chỉnh sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-success" 
+                                                            id="save-btn-@category.Id" 
+                                                            onclick="saveCategory(@category.Id)"
+                                                            style="display: none;"
+                                                            title="Lưu">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary" 
+                                                            id="cancel-btn-@category.Id" 
+                                                            onclick="cancelEdit(@category.Id)"
+                                                            style="display: none;"
+                                                            title="Hủy">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" 
+                                                            onclick="deleteCategory(@category.Id, '@category.Name')"
+                                                            title="Xóa">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-tags text-muted" style="font-size: 4rem;"></i>
+                            <h5 class="mt-3 text-muted">Chưa có thể loại nào</h5>
+                            <p class="text-muted">Hãy thêm thể loại đầu tiên để bắt đầu phân loại tiểu thuyết.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .btn:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: box-shadow 0.15s ease-in-out;
+        }
+        
+        .card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .btn-group-sm .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.775rem;
+        }
+        
+        .category-name-container {
+            min-height: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let originalNames = {};
+
+        function editCategory(categoryId) {
+            const nameDisplay = document.getElementById(`name-display-${categoryId}`);
+            const nameInput = document.getElementById(`name-input-${categoryId}`);
+            const editBtn = document.getElementById(`edit-btn-${categoryId}`);
+            const saveBtn = document.getElementById(`save-btn-${categoryId}`);
+            const cancelBtn = document.getElementById(`cancel-btn-${categoryId}`);
+
+            // Store original name
+            originalNames[categoryId] = nameDisplay.textContent;
+
+            // Toggle elements
+            nameDisplay.style.display = 'none';
+            nameInput.style.display = 'block';
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
+
+            // Focus on input
+            nameInput.focus();
+            nameInput.select();
+        }
+
+        function cancelEdit(categoryId) {
+            const nameDisplay = document.getElementById(`name-display-${categoryId}`);
+            const nameInput = document.getElementById(`name-input-${categoryId}`);
+            const editBtn = document.getElementById(`edit-btn-${categoryId}`);
+            const saveBtn = document.getElementById(`save-btn-${categoryId}`);
+            const cancelBtn = document.getElementById(`cancel-btn-${categoryId}`);
+
+            // Restore original name
+            nameInput.value = originalNames[categoryId];
+
+            // Toggle elements
+            nameDisplay.style.display = 'block';
+            nameInput.style.display = 'none';
+            editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+        }
+
+        async function saveCategory(categoryId) {
+            const nameInput = document.getElementById(`name-input-${categoryId}`);
+            const newName = nameInput.value.trim();
+
+            if (!newName) {
+                showNotification('Tên thể loại không được để trống!', 'danger');
+                return;
+            }
+
+            if (newName === originalNames[categoryId]) {
+                cancelEdit(categoryId);
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+                formData.append('categoryId', categoryId);
+                formData.append('newName', newName);
+
+                const response = await fetch('/Admin/Categories?handler=Update', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const nameDisplay = document.getElementById(`name-display-${categoryId}`);
+                    nameDisplay.textContent = newName;
+                    cancelEdit(categoryId);
+                    showNotification('Cập nhật thể loại thành công!', 'success');
+                } else {
+                    showNotification('Có lỗi xảy ra khi cập nhật thể loại!', 'danger');
+                }
+            } catch (error) {
+                console.error('Error updating category:', error);
+                showNotification('Có lỗi xảy ra khi cập nhật thể loại!', 'danger');
+            }
+        }
+
+        function deleteCategory(categoryId, categoryName) {
+            if (confirm(`Bạn có chắc chắn muốn xóa thể loại "${categoryName}"?\n\nHành động này không thể hoàn tác.`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/Admin/Categories?handler=Delete';
+                
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                form.appendChild(tokenInput);
+                
+                const idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'categoryId';
+                idInput.value = categoryId;
+                form.appendChild(idInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create Bootstrap toast notification
+            const toastContainer = document.getElementById('toast-container') || createToastContainer();
+            
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${getToastIcon(type)} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Initialize and show toast
+            const bsToast = new bootstrap.Toast(toast, {
+                autohide: true,
+                delay: 4000
+            });
+            bsToast.show();
+            
+            // Remove toast element after it's hidden
+            toast.addEventListener('hidden.bs.toast', function () {
+                toast.remove();
+            });
+        }
+        
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container position-fixed top-0 end-0 p-3';
+            container.style.zIndex = '11';
+            document.body.appendChild(container);
+            return container;
+        }
+        
+        function getToastIcon(type) {
+            switch (type) {
+                case 'success': return 'check-circle';
+                case 'danger': return 'exclamation-triangle';
+                case 'warning': return 'exclamation-circle';
+                case 'info': return 'info-circle';
+                default: return 'info-circle';
+            }
+        }
+    </script>
+} 

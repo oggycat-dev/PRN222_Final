@@ -1,0 +1,610 @@
+@page
+@model FinalProject.Pages.Admin.AddNovelModel
+@{
+    ViewData["Title"] = "Thêm tiểu thuyết mới";
+    Layout = "_Layout";
+}
+
+<!-- Add Novel Section -->
+<div class="container-fluid">
+    <!-- Admin Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-plus-circle text-primary"></i> Thêm tiểu thuyết mới</h2>
+                    <p class="text-muted mb-0">Thêm một tác phẩm mới vào thư viện</p>
+                </div>
+                <a asp-page="/Admin/Novels" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <!-- Form Container -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-edit me-2"></i>Thông tin tiểu thuyết</h5>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    
+                    <form method="post" enctype="multipart/form-data" action="/Admin/AddNovel">
+                        @Html.AntiForgeryToken()
+                        
+                        <!-- Basic Information -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin cơ bản
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.Title" class="form-label">Tiêu đề *</label>
+                                        <input asp-for="Novel.Title" class="form-control" placeholder="Nhập tiêu đề tiểu thuyết" />
+                                        <span asp-validation-for="Novel.Title" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.Language" class="form-label">Ngôn ngữ</label>
+                                        <select asp-for="Novel.Language" class="form-select">
+                                            <option value="vi">Tiếng Việt</option>
+                                            <option value="en">English</option>
+                                            <option value="zh">中文</option>
+                                            <option value="ja">日本語</option>
+                                            <option value="ko">한국어</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Novel.Description" class="form-label">Mô tả *</label>
+                                <textarea asp-for="Novel.Description" class="form-control" rows="6" 
+                                         placeholder="Nhập mô tả về nội dung tiểu thuyết"></textarea>
+                                <span asp-validation-for="Novel.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Author and Translator -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-user me-2 text-primary"></i>Tác giả & Dịch giả
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.AuthorId" class="form-label">Tác giả *</label>
+                                        <select asp-for="Novel.AuthorId" class="form-select">
+                                            <option value="">Chọn tác giả</option>
+                                            @foreach (var author in Model.Authors)
+                                            {
+                                                <option value="@author.Id">@author.FullName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Novel.AuthorId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.TranslatorId" class="form-label">Người dịch</label>
+                                        <select asp-for="Novel.TranslatorId" class="form-select">
+                                            <option value="">Chọn người dịch (tùy chọn)</option>
+                                            @foreach (var translator in Model.Translators)
+                                            {
+                                                <option value="@translator.Id">@translator.FullName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Categories and Tags -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-tags me-2 text-primary"></i>Phân loại
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Thể loại</label>
+                                <div class="row">
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <div class="col-4 col-6 mb-2">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="SelectedCategoryIds" value="@category.Id" 
+                                                       class="form-check-input" id="category_@category.Id" />
+                                                <label class="form-check-label" for="category_@category.Id">
+                                                    @category.Name
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Novel.Tags" class="form-label">Tags</label>
+                                <input asp-for="Novel.Tags" class="form-control"
+                                       placeholder="Nhập các từ khóa cách nhau bằng dấu phẩy" />
+                                <div class="form-text">Các từ khóa giúp người đọc tìm kiếm dễ dàng hơn</div>
+                            </div>
+                        </div>
+
+                        <!-- Image and Publication -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-image me-2 text-primary"></i>Hình ảnh và xuất bản
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.ImageUrl" class="form-label">URL ảnh bìa</label>
+                                                                <input asp-for="Novel.ImageUrl" class="form-control" 
+                               placeholder="https://example.com/image.jpg" />
+                                        <div class="form-text">Hoặc tải ảnh lên bên dưới</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Tải ảnh lên</label>
+                                        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                                        <div class="form-text">Định dạng: JPG, PNG, GIF. Tối đa 5MB</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="image-preview-container text-center">
+                                        <div id="imagePreview" class="image-preview d-none">
+                                            <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                                        </div>
+                                        <div id="defaultPreview" class="default-preview p-4 border rounded bg-light">
+                                            <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                                            <p class="text-muted mb-0">Xem trước ảnh bìa</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.PublishedDate" class="form-label">Ngày xuất bản</label>
+                                        <input asp-for="Novel.PublishedDate" type="date" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.Status" class="form-label">Trạng thái</label>
+                                        <select asp-for="Novel.Status" class="form-select">
+                                            <option value="0">Đang tiến hành</option>
+                                            <option value="1">Hoàn thành</option>
+                                            <option value="2">Tạm dừng</option>
+                                            <option value="3">Bỏ dở</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Source Information -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-link me-2 text-primary"></i>Thông tin nguồn
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Novel.OriginalSource" class="form-label">Nguồn gốc</label>
+                                <input asp-for="Novel.OriginalSource" class="form-control" 
+                                       placeholder="URL hoặc thông tin về nguồn gốc tác phẩm" />
+                                <div class="form-text">Thông tin về trang web hoặc nguồn gốc của tác phẩm</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-page="/Admin/Novels" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Lưu tiểu thuyết
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%) !important;
+        }
+        
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+        }
+        
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .image-preview-container {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .default-preview {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .default-preview:hover {
+            background-color: #e9ecef !important;
+            border-color: #667eea !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Enhanced Add Novel functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeImagePreview();
+            initializeFormValidation();
+            initializeEnhancements();
+        });
+
+        function initializeImagePreview() {
+            const imageUrlInput = document.querySelector('input[name="Novel.ImageUrl"]');
+            const imageFileInput = document.querySelector('input[name="ImageFile"]');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            const defaultPreview = document.getElementById('defaultPreview');
+
+            // Preview from URL
+            imageUrlInput?.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url) {
+                    showImagePreview(url);
+                } else {
+                    resetImagePreview();
+                }
+            });
+
+            // Preview from file upload with drag & drop
+            imageFileInput?.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    if (validateImageFile(file)) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            showImagePreview(e.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                        
+                        // Clear URL input when file is selected
+                        imageUrlInput.value = '';
+                    } else {
+                        this.value = '';
+                        resetImagePreview();
+                    }
+                } else {
+                    resetImagePreview();
+                }
+            });
+
+            // Drag and drop functionality
+            imagePreview?.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--cosmic-text)';
+                this.style.background = 'rgba(78, 205, 196, 0.1)';
+            });
+
+            imagePreview?.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'rgba(78, 205, 196, 0.4)';
+                this.style.background = 'rgba(255, 255, 255, 0.05)';
+            });
+
+            imagePreview?.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'rgba(78, 205, 196, 0.4)';
+                this.style.background = 'rgba(255, 255, 255, 0.05)';
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (validateImageFile(file)) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            showImagePreview(e.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                        
+                        // Update file input
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        imageFileInput.files = dataTransfer.files;
+                        
+                        // Clear URL input
+                        imageUrlInput.value = '';
+                    }
+                }
+            });
+
+            function validateImageFile(file) {
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('Kích thước ảnh không được vượt quá 5MB.', 'error');
+                    return false;
+                }
+
+                // Check file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    showNotification('Chỉ chấp nhận các định dạng ảnh: JPG, JPEG, PNG, GIF.', 'error');
+                    return false;
+                }
+
+                return true;
+            }
+
+            function showImagePreview(src) {
+                previewImg.src = src;
+                imagePreview.classList.remove('d-none');
+                defaultPreview.classList.add('d-none');
+            }
+
+            function resetImagePreview() {
+                previewImg.src = '';
+                imagePreview.classList.add('d-none');
+                defaultPreview.classList.remove('d-none');
+                imageUrlInput.value = '';
+                imageFileInput.value = '';
+            }
+
+            // Make image preview clickable
+            imagePreview?.addEventListener('click', function() {
+                if (this.querySelector('img')) {
+                    // If there's an image, reset it
+                    resetImagePreview();
+                } else {
+                    // If no image, trigger file input
+                    imageFileInput?.click();
+                }
+            });
+        }
+
+        function initializeFormValidation() {
+            const form = document.querySelector('.cosmic-form');
+            
+            form?.addEventListener('submit', function(e) {
+                const title = document.querySelector('input[name="Novel.Title"]').value.trim();
+                const description = document.querySelector('textarea[name="Novel.Description"]').value.trim();
+                const authorId = document.querySelector('select[name="Novel.AuthorId"]').value;
+
+                if (!title) {
+                    showNotification('Vui lòng nhập tiêu đề tiểu thuyết.', 'error');
+                    e.preventDefault();
+                    return;
+                }
+
+                if (!description) {
+                    showNotification('Vui lòng nhập mô tả tiểu thuyết.', 'error');
+                    e.preventDefault();
+                    return;
+                }
+
+                if (!authorId) {
+                    showNotification('Vui lòng chọn tác giả.', 'error');
+                    e.preventDefault();
+                    return;
+                }
+
+                // Show loading
+                showLoading();
+                
+                // Add small delay to show loading animation
+                setTimeout(() => {
+                    // Form will submit normally
+                }, 500);
+            });
+        }
+
+        function initializeEnhancements() {
+            // Add real-time character count for description
+            const descriptionTextarea = document.querySelector('textarea[name="Novel.Description"]');
+            if (descriptionTextarea) {
+                const charCountElement = document.createElement('small');
+                charCountElement.className = 'cosmic-form-help';
+                charCountElement.style.float = 'right';
+                descriptionTextarea.parentNode.appendChild(charCountElement);
+
+                function updateCharCount() {
+                    const length = descriptionTextarea.value.length;
+                    charCountElement.textContent = `${length} ký tự`;
+                    charCountElement.style.color = length > 500 ? '#1dd1a1' : 'rgba(255, 255, 255, 0.6)';
+                }
+
+                descriptionTextarea.addEventListener('input', updateCharCount);
+                updateCharCount();
+            }
+
+            // Add title length validation
+            const titleInput = document.querySelector('input[name="Novel.Title"]');
+            if (titleInput) {
+                titleInput.addEventListener('input', function() {
+                    if (this.value.length > 100) {
+                        this.style.borderColor = '#ff6b6b';
+                    } else {
+                        this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    }
+                });
+            }
+
+            // Animate form sections on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.cosmic-form-section').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                observer.observe(section);
+            });
+        }
+
+        function showLoading() {
+            const loadingHtml = `
+                <div class="cosmic-loading" style="display: flex;">
+                    <div style="text-align: center; color: white;">
+                        <div class="cosmic-spinner"></div>
+                        <p style="margin-top: 1rem; font-size: 1.1rem;">Đang thêm tiểu thuyết...</p>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', loadingHtml);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? 'rgba(255, 107, 107, 0.9)' : 'rgba(78, 205, 196, 0.9)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                font-weight: 500;
+                z-index: 10000;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'error' ? 'rgba(255, 107, 107, 0.3)' : 'rgba(78, 205, 196, 0.3)'};
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                animation: slideInRight 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'info-circle'}" style="margin-right: 0.5rem;"></i>
+                    ${message}
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @@keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @@keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+}

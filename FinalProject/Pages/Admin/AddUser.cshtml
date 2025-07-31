@@ -1,0 +1,305 @@
+@page
+@model FinalProject.Pages.Admin.AddUserModel
+@{
+    ViewData["Title"] = "Thêm người dùng mới";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-user-plus text-success"></i> Thêm người dùng mới</h2>
+                    <p class="text-muted mb-0">Tạo tài khoản người dùng mới trong hệ thống</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-page="/Admin/Users" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                    </a>
+                    <a asp-page="/Admin/Dashboard" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@Model.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@Model.SuccessMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Add User Form -->
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-circle me-2"></i>Thông tin người dùng mới
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="row">
+                            <!-- Username -->
+                            <div class="col-6 mb-3">
+                                <label asp-for="AddUserRequest.Username" class="form-label fw-bold">
+                                    <i class="fas fa-user text-primary me-2"></i>Tên đăng nhập
+                                </label>
+                                <input asp-for="AddUserRequest.Username" class="form-control" placeholder="Nhập tên đăng nhập" />
+                                <span asp-validation-for="AddUserRequest.Username" class="text-danger small"></span>
+                                <div class="form-text">3-50 ký tự, chỉ chữ cái, số và dấu gạch dưới</div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-6 mb-3">
+                                <label asp-for="AddUserRequest.Email" class="form-label fw-bold">
+                                    <i class="fas fa-envelope text-info me-2"></i>Email
+                                </label>
+                                <input asp-for="AddUserRequest.Email" type="email" class="form-control" placeholder="example@domain.com" />
+                                <span asp-validation-for="AddUserRequest.Email" class="text-danger small"></span>
+                                <div class="form-text">Email để đăng nhập và liên hệ</div>
+                            </div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="AddUserRequest.FullName" class="form-label fw-bold">
+                                <i class="fas fa-id-card text-success me-2"></i>Họ và tên
+                            </label>
+                            <input asp-for="AddUserRequest.FullName" class="form-control" placeholder="Nhập họ và tên đầy đủ" />
+                            <span asp-validation-for="AddUserRequest.FullName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="AddUserRequest.Password" class="form-label fw-bold">
+                                <i class="fas fa-lock text-warning me-2"></i>Mật khẩu
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="AddUserRequest.Password" type="password" class="form-control" id="passwordInput" placeholder="Nhập mật khẩu" />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="AddUserRequest.Password" class="text-danger small"></span>
+                            <div class="form-text">Ít nhất 6 ký tự</div>
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="mb-4">
+                            <label asp-for="AddUserRequest.Bio" class="form-label fw-bold">
+                                <i class="fas fa-info-circle text-secondary me-2"></i>Giới thiệu bản thân (Tùy chọn)
+                            </label>
+                            <textarea asp-for="AddUserRequest.Bio" class="form-control" rows="3" placeholder="Chia sẻ một chút về người dùng này..."></textarea>
+                            <span asp-validation-for="AddUserRequest.Bio" class="text-danger small"></span>
+                            <div class="form-text">Tối đa 500 ký tự</div>
+                        </div>
+
+                        <!-- Default Role Info -->
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Thông tin:</strong> Người dùng mới sẽ được tạo với vai trò <strong>User</strong> mặc định. 
+                            Bạn có thể thay đổi vai trò sau khi tạo tài khoản thành công.
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-page="/Admin/Users" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-times me-2"></i>Hủy bỏ
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-user-plus me-2"></i>Tạo người dùng
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Guidelines Card -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-8">
+            <div class="card border-left-primary">
+                <div class="card-body">
+                    <h6 class="card-title text-primary">
+                        <i class="fas fa-lightbulb me-2"></i>Hướng dẫn tạo người dùng
+                    </h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="text-success">✓ Nên làm:</h6>
+                            <ul class="list-unstyled text-muted small">
+                                <li><i class="fas fa-check text-success me-2"></i>Sử dụng tên đăng nhập duy nhất</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Email hợp lệ và chưa được sử dụng</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Mật khẩu mạnh (ít nhất 6 ký tự)</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Họ tên đầy đủ và chính xác</li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-danger">✗ Tránh:</h6>
+                            <ul class="list-unstyled text-muted small">
+                                <li><i class="fas fa-times text-danger me-2"></i>Tên đăng nhập có ký tự đặc biệt</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Email không hợp lệ</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Mật khẩu quá đơn giản</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Bỏ trống thông tin bắt buộc</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        });
+
+        // Auto-generate username suggestion based on full name
+        document.querySelector('input[name="AddUserRequest.FullName"]').addEventListener('input', function() {
+            const fullName = this.value;
+            const usernameInput = document.querySelector('input[name="AddUserRequest.Username"]');
+            
+            if (fullName && !usernameInput.value) {
+                // Create a simple username suggestion
+                const suggestion = fullName.toLowerCase()
+                    .replace(/\s+/g, '')
+                    .replace(/[^\w]/g, '')
+                    .substring(0, 20);
+                
+                if (suggestion) {
+                    usernameInput.placeholder = `Gợi ý: ${suggestion}`;
+                }
+            }
+        });
+
+        // Character counter for bio
+        const bioTextarea = document.querySelector('textarea[name="AddUserRequest.Bio"]');
+        if (bioTextarea) {
+            const maxLength = 500;
+            const counter = document.createElement('div');
+            counter.className = 'form-text text-end';
+            counter.innerHTML = `<span id="bioCounter">0</span>/${maxLength} ký tự`;
+            bioTextarea.parentNode.insertBefore(counter, bioTextarea.nextSibling);
+
+            bioTextarea.addEventListener('input', function() {
+                const currentLength = this.value.length;
+                document.getElementById('bioCounter').textContent = currentLength;
+                
+                if (currentLength > maxLength * 0.9) {
+                    counter.classList.add('text-warning');
+                } else {
+                    counter.classList.remove('text-warning');
+                }
+            });
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        
+        .border-left-primary {
+            border-left: 4px solid #667eea !important;
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .form-label {
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #44a08d 0%, #4ecdc4 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+        
+        .alert-info {
+            background-color: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+        
+        .text-primary {
+            color: #667eea !important;
+        }
+        
+        .needs-validation .form-control:invalid {
+            border-color: #dc3545;
+        }
+        
+        .needs-validation .form-control:valid {
+            border-color: #28a745;
+        }
+        
+        .input-group .btn {
+            border-color: #ced4da;
+        }
+        
+        .shadow-lg {
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+        }
+    </style>
+} 

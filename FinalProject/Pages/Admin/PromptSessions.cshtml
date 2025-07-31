@@ -1,0 +1,395 @@
+@page
+@model FinalProject.Pages.Admin.PromptSessionsModel
+@{
+    ViewData["Title"] = "Quản lý phiên chat";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-comments text-warning"></i> Quản lý phiên chat</h2>
+                    <p class="text-muted mb-0">Quản lý tất cả phiên chat trong hệ thống</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-page="/Admin/Dashboard" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(TempData["SuccessMessage"]?.ToString()))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Search and Filter Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-search"></i> Tìm kiếm và lọc
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="searchTerm" class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
+                                   value="@Model.SearchTerm" placeholder="Tiêu đề, mô tả, tên người dùng...">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="statusFilter" class="form-label">Trạng thái</label>
+                            <select class="form-select" id="statusFilter" name="statusFilter">
+                                <option value="">Tất cả</option>
+                                <option value="active" selected="@(Model.StatusFilter == "active")">Hoạt động</option>
+                                <option value="inactive" selected="@(Model.StatusFilter == "inactive")">Bị vô hiệu hóa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="userFilter" class="form-label">Người dùng</label>
+                            <input type="text" class="form-control" id="userFilter" name="userFilter" 
+                                   value="@Model.UserFilter" placeholder="Tên đăng nhập, họ tên...">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="d-grid w-100">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sessions Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng phiên chat</div>
+                            <div class="h5">@Model.PromptSessions.Count</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-comments fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Đang hoạt động</div>
+                            <div class="h5">@Model.PromptSessions.Count(s => s.IsActive)</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-play-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Bị vô hiệu hóa</div>
+                            <div class="h5">@Model.PromptSessions.Count(s => !s.IsActive)</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-pause-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng tin nhắn</div>
+                            <div class="h5">@Model.PromptSessions.Sum(s => s.MessageCount)</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-envelope fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sessions Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list"></i> Danh sách phiên chat (@Model.PromptSessions.Count)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.PromptSessions.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Người dùng</th>
+                                        <th>Số tin nhắn</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Cập nhật</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var session in Model.PromptSessions)
+                                    {
+                                        <tr class="@(session.IsActive ? "" : "table-secondary")">
+                                            <td>
+                                                <span class="badge bg-light text-dark">#@session.Id</span>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>
+                                                        <a asp-page="/Admin/SessionDetails" asp-route-id="@session.Id" class="text-decoration-none session-title-link">
+                                                            @session.Title
+                                                        </a>
+                                                    </strong>
+                                                    @if (!string.IsNullOrEmpty(session.Description))
+                                                    {
+                                                        <br><small class="text-muted">@session.Description</small>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm me-2">
+                                                        <div class="avatar-title bg-primary rounded-circle">
+                                                            @session.Username.FirstOrDefault().ToString().ToUpper()
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@session.Username</strong>
+                                                        <br><small class="text-muted">@session.UserFullName</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if (session.MessageCount > 0)
+                                                {
+                                                    <span class="badge bg-info">@session.MessageCount tin nhắn</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Chưa có tin nhắn</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (session.IsActive)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-play"></i> Hoạt động
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-pause"></i> Vô hiệu hóa
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <small>
+                                                    @session.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <small>
+                                                    @if (session.UpdatedAt.HasValue)
+                                                    {
+                                                        @session.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">Chưa cập nhật</span>
+                                                    }
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <!-- View Details Button -->
+                                                    <a asp-page="/Admin/SessionDetails" asp-route-id="@session.Id" class="btn btn-sm btn-outline-info" title="Xem chi tiết tin nhắn">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    
+                                                    @if (session.IsActive)
+                                                    {
+                                                        <form method="post" asp-page-handler="DeactivateSession" class="d-inline">
+                                                            <input type="hidden" name="sessionId" value="@session.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-warning" 
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa phiên chat này?')"
+                                                                    title="Vô hiệu hóa phiên chat">
+                                                                <i class="fas fa-pause"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form method="post" asp-page-handler="ActivateSession" class="d-inline">
+                                                            <input type="hidden" name="sessionId" value="@session.Id" />
+                                                            <button type="submit" class="btn btn-sm btn-outline-success" 
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn kích hoạt phiên chat này?')"
+                                                                    title="Kích hoạt phiên chat">
+                                                                <i class="fas fa-play"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Không tìm thấy phiên chat nào</h5>
+                            <p class="text-muted">Thử thay đổi điều kiện tìm kiếm hoặc kiểm tra lại hệ thống.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Details Modal (Optional for future enhancement) -->
+    <div class="modal fade" id="sessionDetailsModal" tabindex="-1" aria-labelledby="sessionDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sessionDetailsModalLabel">Chi tiết phiên chat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Modal content will be loaded dynamically -->
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .avatar-title {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+        
+        .table-secondary td {
+            opacity: 0.7;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+        }
+        
+        .text-warning {
+            color: #f39c12 !important;
+        }
+        
+        .bg-warning {
+            background-color: #f39c12 !important;
+        }
+        
+        .session-title-link {
+            color: #495057;
+            transition: color 0.2s ease;
+        }
+        
+        .session-title-link:hover {
+            color: #007bff;
+            text-decoration: underline !important;
+        }
+    </style>
+} 

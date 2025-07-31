@@ -1,0 +1,647 @@
+@page
+@model FinalProject.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = "_Layout";
+}
+
+<!-- Modern Register Section -->
+<section class="register-section position-relative overflow-hidden">
+    <div class="geometric-background"></div>
+    <div class="floating-elements"></div>
+    
+    <div class="container position-relative">
+        <div class="row justify-content-center align-items-center min-vh-100 py-5">
+            <div class="col-lg-8 col-xl-6">
+                <div class="register-container" data-aos="fade-up">
+                    <!-- Header -->
+                    <div class="register-header text-center mb-4">
+                        <div class="register-icon mb-3">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h2 class="register-title">
+                            Gia nhập <span class="text-accent">Cosmic Novels</span>
+                        </h2>
+                        <p class="register-subtitle">Tạo tài khoản để khám phá những khả năng vô hạn</p>
+                    </div>
+
+                    <!-- Alert Messages -->
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            @Model.ErrorMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @Model.SuccessMessage
+                        </div>
+                    }
+
+                    <!-- Register Form -->
+                    <div class="register-form-container">
+                        <form method="post" class="register-form">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="RegisterRequest.Username" class="form-label">
+                                            <i class="fas fa-user me-2"></i>Tên đăng nhập
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input asp-for="RegisterRequest.Username" class="form-control" placeholder="Nhập tên đăng nhập" />
+                                        </div>
+                                        <span asp-validation-for="RegisterRequest.Username" class="validation-error"></span>
+                                        <small class="form-text">3-50 ký tự, chỉ chứa chữ cái, số và dấu gạch dưới</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="RegisterRequest.Email" class="form-label">
+                                            <i class="fas fa-envelope me-2"></i>Email
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input asp-for="RegisterRequest.Email" type="email" class="form-control" placeholder="example@domain.com" />
+                                        </div>
+                                        <span asp-validation-for="RegisterRequest.Email" class="validation-error"></span>
+                                        <small class="form-text">Email để đăng nhập và khôi phục mật khẩu</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label asp-for="RegisterRequest.FullName" class="form-label">
+                                    <i class="fas fa-id-card me-2"></i>Họ và tên
+                                </label>
+                                <div class="input-wrapper">
+                                    <input asp-for="RegisterRequest.FullName" class="form-control" placeholder="Nhập họ và tên đầy đủ" />
+                                </div>
+                                <span asp-validation-for="RegisterRequest.FullName" class="validation-error"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="RegisterRequest.Password" class="form-label">
+                                            <i class="fas fa-lock me-2"></i>Mật khẩu
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input asp-for="RegisterRequest.Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                                        </div>
+                                        <span asp-validation-for="RegisterRequest.Password" class="validation-error"></span>
+                                        <small class="form-text">Ít nhất 6 ký tự</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label asp-for="ConfirmPassword" class="form-label">
+                                            <i class="fas fa-shield-alt me-2"></i>Xác nhận mật khẩu
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Nhập lại mật khẩu" />
+                                        </div>
+                                        <span asp-validation-for="ConfirmPassword" class="validation-error"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label asp-for="RegisterRequest.Bio" class="form-label">
+                                    <i class="fas fa-info-circle me-2"></i>Giới thiệu bản thân (tùy chọn)
+                                </label>
+                                <div class="input-wrapper">
+                                    <textarea asp-for="RegisterRequest.Bio" class="form-control" rows="3" placeholder="Chia sẻ một chút về bản thân..."></textarea>
+                                </div>
+                                <span asp-validation-for="RegisterRequest.Bio" class="validation-error"></span>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        Tôi đồng ý với <a href="#" class="link-primary" data-bs-toggle="modal" data-bs-target="#termsModal">điều khoản sử dụng</a> và <a href="#" class="link-primary">chính sách bảo mật</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-rocket me-2"></i>Khởi tạo tài khoản
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="register-footer text-center">
+                            <div class="divider">
+                                <span>hoặc</span>
+                            </div>
+                            <p class="login-link">
+                                Đã có tài khoản? 
+                                <a asp-page="/Login" class="link-primary">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập ngay
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">
+                    <i class="fas fa-scroll me-2"></i>Điều khoản sử dụng
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="terms-section">
+                    <h6 class="terms-heading"><i class="fas fa-check-circle me-2"></i>1. Chấp nhận điều khoản</h6>
+                    <p>Bằng việc sử dụng dịch vụ này, bạn đồng ý tuân thủ và bị ràng buộc bởi các điều khoản và điều kiện sử dụng sau đây.</p>
+                </div>
+                
+                <div class="terms-section">
+                    <h6 class="terms-heading"><i class="fas fa-shield-alt me-2"></i>2. Sử dụng dịch vụ</h6>
+                    <p>Bạn cam kết sử dụng dịch vụ một cách hợp pháp và không vi phạm quyền của bên thứ ba.</p>
+                </div>
+                
+                <div class="terms-section">
+                    <h6 class="terms-heading"><i class="fas fa-lock me-2"></i>3. Bảo mật thông tin</h6>
+                    <p>Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo chính sách bảo mật.</p>
+                </div>
+                
+                <div class="terms-section">
+                    <h6 class="terms-heading"><i class="fas fa-user-shield me-2"></i>4. Trách nhiệm của người dùng</h6>
+                    <p>Bạn chịu trách nhiệm về tài khoản và mật khẩu của mình.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!-- AOS Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Real-time password confirmation validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const password = document.querySelector('input[name="RegisterRequest.Password"]');
+            const confirmPassword = document.querySelector('input[name="ConfirmPassword"]');
+            
+            function validatePasswordMatch() {
+                if (confirmPassword.value && password.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity('Mật khẩu xác nhận không khớp');
+                } else {
+                    confirmPassword.setCustomValidity('');
+                }
+            }
+            
+            password.addEventListener('input', validatePasswordMatch);
+            confirmPassword.addEventListener('input', validatePasswordMatch);
+        });
+
+        // Create floating elements
+        function createFloatingElements() {
+            const elementsContainer = document.querySelector('.floating-elements');
+            if (!elementsContainer) return;
+
+            for (let i = 0; i < 20; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                element.style.animationDelay = Math.random() * 4 + 's';
+                element.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                elementsContainer.appendChild(element);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingElements();
+        });
+    </script>
+}
+
+@section Styles {
+    <!-- AOS Animation Library CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --success-color: #10ac84;
+            --danger-color: #ff6b6b;
+        }
+
+        /* Register Section */
+        .register-section {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .geometric-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+            opacity: 0.3;
+        }
+
+        @@keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.1; }
+        }
+
+        /* Register Container */
+        .register-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--text-secondary), transparent);
+        }
+
+        /* Register Header */
+        .register-header {
+            position: relative;
+            z-index: 2;
+        }
+
+        .register-icon {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-primary);
+        }
+
+        .register-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .register-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: var(--text-secondary);
+        }
+
+        /* Form Styling */
+        .register-form-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .validation-error {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .form-text {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        /* Custom Checkbox */
+        .form-check {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 4px;
+            margin-top: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-check-input:checked {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .form-check-label {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        /* Links */
+        .link-primary {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .link-primary:hover {
+            color: var(--text-secondary);
+            border-bottom-color: var(--text-secondary);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Modern Buttons */
+        .btn {
+            position: relative;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        .btn-outline {
+            background: var(--card-bg);
+            border-color: var(--card-border);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--text-secondary);
+            text-decoration: none;
+            color: var(--bg-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        .register-footer {
+            position: relative;
+            z-index: 2;
+        }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+        }
+
+        .divider span {
+            background: var(--bg-primary);
+            padding: 0 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .login-link {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Alert Messages */
+        .alert {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-danger {
+            border-color: rgba(255, 107, 107, 0.4);
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--danger-color);
+        }
+
+        .alert-success {
+            border-color: rgba(16, 172, 132, 0.4);
+            background: rgba(16, 172, 132, 0.1);
+            color: var(--success-color);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close:hover {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .terms-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-heading {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .terms-section p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--card-border);
+            padding: 1.5rem;
+        }
+    </style>
+} 

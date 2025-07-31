@@ -1,0 +1,436 @@
+@page
+@model FinalProject.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-users text-primary"></i> Quản lý người dùng</h2>
+                    <p class="text-muted mb-0">Quản lý tài khoản người dùng trong hệ thống</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-page="/Admin/AddUser" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i> Thêm người dùng
+                    </a>
+                    <a asp-page="/Admin/Dashboard" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(TempData["SuccessMessage"]?.ToString()))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Search and Filter Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-search"></i> Tìm kiếm và lọc
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="searchTerm" class="form-label">Tìm kiếm</label>
+                            <input type="text" class="form-control" id="searchTerm" name="searchTerm" 
+                                   value="@Model.SearchTerm" placeholder="Tên đăng nhập, họ tên, email...">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="statusFilter" class="form-label">Trạng thái</label>
+                            <select class="form-select" id="statusFilter" name="statusFilter">
+                                <option value="">Tất cả</option>
+                                <option value="active" selected="@(Model.StatusFilter == "active")">Hoạt động</option>
+                                <option value="inactive" selected="@(Model.StatusFilter == "inactive")">Bị vô hiệu hóa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="roleFilter" class="form-label">Vai trò</label>
+                            <select class="form-select" id="roleFilter" name="roleFilter">
+                                <option value="">Tất cả</option>
+                                <option value="Admin" selected="@(Model.RoleFilter == "Admin")">Admin</option>
+                                <option value="User" selected="@(Model.RoleFilter == "User")">User</option>
+                                <option value="Moderator" selected="@(Model.RoleFilter == "Moderator")">Moderator</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <div class="d-grid w-100">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng người dùng</div>
+                            <div class="h5">@Model.Users.Count</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Đang hoạt động</div>
+                            <div class="h5">@Model.Users.Count(u => u.IsActive)</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Bị vô hiệu hóa</div>
+                            <div class="h5">@Model.Users.Count(u => !u.IsActive)</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-times fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Admin</div>
+                            <div class="h5">@Model.Users.Count(u => u.RoleName.ToLower() == "admin")</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-shield fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        Danh sách người dùng (@Model.Users.Count)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Users.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên đăng nhập</th>
+                                        <th>Họ tên</th>
+                                        <th>Email</th>
+                                        <th>Coins</th>
+                                        <th>Vai trò</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Users)
+                                    {
+                                        <tr class="@(user.IsActive ? "" : "table-secondary")">
+                                            <td>
+                                                <span class="badge bg-light text-dark">#@user.Id</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm me-2">
+                                                        <div class="avatar-title bg-primary rounded-circle">
+                                                            @user.Username.FirstOrDefault().ToString().ToUpper()
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@user.Username</strong>
+                                                        @if (!string.IsNullOrEmpty(user.Bio))
+                                                        {
+                                                            <br><small class="text-muted">@user.Bio</small>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@user.FullName</td>
+                                            <td>
+                                                <a href="mailto:@user.Email" class="text-decoration-none">
+                                                    @user.Email
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="me-2">@user.Coins.ToString("N0")</span>
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#editCoinsModal" 
+                                                            data-user-id="@user.Id"
+                                                            data-user-name="@user.Username"
+                                                            data-current-coins="@user.Coins"
+                                                            title="Chỉnh sửa coins">
+                                                        Sửa
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @switch (user.RoleName.ToLower())
+                                                {
+                                                    case "admin":
+                                                        <span class="badge bg-danger">@user.RoleName</span>
+                                                        break;
+                                                    case "moderator":
+                                                        <span class="badge bg-warning">@user.RoleName</span>
+                                                        break;
+                                                    default:
+                                                        <span class="badge bg-primary">@user.RoleName</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check"></i> Hoạt động
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-times"></i> Vô hiệu hóa
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <small>
+                                                    @user.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                                    @if (user.UpdatedAt.HasValue)
+                                                    {
+                                                        <br><span class="text-muted">Cập nhật: @user.UpdatedAt.Value.ToString("dd/MM/yyyy")</span>
+                                                    }
+                                                </small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <!-- Edit Button -->
+                                                    <a asp-page="/Admin/EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa người dùng">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    
+                                                    @if (user.Id != Model.UserId) // Don't allow admin to disable themselves
+                                                    {
+                                                        @if (user.IsActive)
+                                                        {
+                                                            <form method="post" asp-page-handler="DeactivateUser" class="d-inline">
+                                                                <input type="hidden" name="userId" value="@user.Id" />
+                                                                <button type="submit" class="btn btn-sm btn-outline-warning" 
+                                                                        onclick="return confirm('Bạn có chắc chắn muốn vô hiệu hóa người dùng này?')"
+                                                                        title="Vô hiệu hóa người dùng">
+                                                                    <i class="fas fa-ban"></i>
+                                                                </button>
+                                                            </form>
+                                                        }
+                                                        else
+                                                        {
+                                                            <form method="post" asp-page-handler="ActivateUser" class="d-inline">
+                                                                <input type="hidden" name="userId" value="@user.Id" />
+                                                                <button type="submit" class="btn btn-sm btn-outline-success" 
+                                                                        onclick="return confirm('Bạn có chắc chắn muốn kích hoạt người dùng này?')"
+                                                                        title="Kích hoạt người dùng">
+                                                                    <i class="fas fa-check"></i>
+                                                                </button>
+                                                            </form>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-info ms-2">
+                                                            <i class="fas fa-user"></i> Bạn
+                                                        </span>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Không tìm thấy người dùng nào</h5>
+                            <p class="text-muted">Thử thay đổi điều kiện tìm kiếm hoặc <a asp-page="/Admin/AddUser">thêm người dùng mới</a>.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Coins Modal -->
+<div class="modal fade" id="editCoinsModal" tabindex="-1" aria-labelledby="editCoinsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCoinsModalLabel">
+                    Chỉnh sửa Coins
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" asp-page-handler="UpdateCoins">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Người dùng:</label>
+                        <p class="form-control-plaintext" id="modalUserName"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalCurrentCoins" class="form-label">Số coins hiện tại:</label>
+                        <p class="form-control-plaintext text-primary fw-bold" id="modalCurrentCoins"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newCoins" class="form-label">Số coins mới: <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="newCoins" name="newCoins" 
+                               step="0.01" min="0" required>
+                        <div class="form-text">Nhập số coins mới cho người dùng (phải ≥ 0)</div>
+                    </div>
+                    <input type="hidden" id="modalUserId" name="userId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Cập nhật Coins
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .avatar-title {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+        
+        .table-secondary td {
+            opacity: 0.7;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Handle edit coins modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const editCoinsModal = document.getElementById('editCoinsModal');
+            if (editCoinsModal) {
+                editCoinsModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const userId = button.getAttribute('data-user-id');
+                    const userName = button.getAttribute('data-user-name');
+                    const currentCoins = button.getAttribute('data-current-coins');
+                    
+                    document.getElementById('modalUserId').value = userId;
+                    document.getElementById('modalUserName').textContent = userName;
+                    document.getElementById('modalCurrentCoins').textContent = parseFloat(currentCoins).toLocaleString('vi-VN') + ' coins';
+                    document.getElementById('newCoins').value = currentCoins;
+                });
+            }
+        });
+    </script>
+} 

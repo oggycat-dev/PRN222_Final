@@ -1,0 +1,504 @@
+@page "{novelId:int}"
+@model FinalProject.Pages.Staff.NovelChaptersModel
+@{
+    ViewData["Title"] = "Quản lý chương";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-list-ol text-primary"></i> Quản lý chương</h2>
+                    <p class="text-muted mb-0">Tiểu thuyết: <strong>@Model.Novel?.Title</strong></p>
+                </div>
+                <div>
+                    <a asp-page="/Staff/Novels" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+    }
+    
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Novel Info Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            @if (!string.IsNullOrEmpty(Model.Novel?.ImageUrl))
+                            {
+                                <img src="@Model.Novel.ImageUrl" alt="@Model.Novel.Title" 
+                                     class="img-fluid rounded" style="max-height: 120px;">
+                            }
+                            else
+                            {
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded" 
+                                     style="height: 120px;">
+                                    <i class="fas fa-book fa-2x text-muted"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-10">
+                            <h5 class="card-title">@Model.Novel?.Title</h5>
+                            <p class="card-text text-muted">@Model.Novel?.Description</p>
+                            <div class="d-flex gap-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-user me-1"></i>Tác giả: @Model.Novel?.Author?.FullName
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-list-ol me-1"></i>Tổng chương: @Model.Chapters.Count()
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-eye me-1"></i>Lượt xem: @Model.Novel?.ViewCount.ToString("N0")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Chapter Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-plus me-2"></i>Thêm chương mới
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <h6>Có lỗi trong form:</h6>
+                            <ul class="mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    
+                    <form method="post" asp-page-handler="Add" asp-route-novelId="@Model.NovelId">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="NovelId" value="@Model.NovelId" />
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="NewChapter_Title" class="form-label">Tiêu đề chương *</label>
+                                    <input asp-for="NewChapter.Title" class="form-control" placeholder="Nhập tiêu đề chương" required>
+                                    <span asp-validation-for="NewChapter.Title" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="NewChapter.Status" class="form-label">Trạng thái</label>
+                                    <select asp-for="NewChapter.Status" class="form-select">
+                                        <option value="0">Bản nháp</option>
+                                        <option value="1">Đã xuất bản</option>
+                                        <option value="2">Lưu trữ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="NewChapter.TranslatedById" class="form-label">Người dịch</label>
+                                    <select asp-for="NewChapter.TranslatedById" class="form-select">
+                                        <option value="">-- Chọn người dịch --</option>
+                                        @if (Model.Translators != null)
+                                        {
+                                            @foreach (var translator in Model.Translators)
+                                            {
+                                                <option value="@translator.Id">@translator.FullName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label asp-for="NewChapter.Price" class="form-label">Giá chương (coins)</label>
+                                    <input asp-for="NewChapter.Price" type="number" step="0.01" min="0" max="999999.99" class="form-control" placeholder="0.00">
+                                    <span asp-validation-for="NewChapter.Price" class="text-danger"></span>
+                                    <small class="form-text text-muted">Để 0 cho chương miễn phí</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="NewChapter_Content" class="form-label">Nội dung chương *</label>
+                            <textarea asp-for="NewChapter.Content" class="form-control" rows="10" 
+                                      placeholder="Nhập nội dung chương..." required></textarea>
+                            <span asp-validation-for="NewChapter.Content" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="NewChapter.TranslatorNotes" class="form-label">Ghi chú dịch giả</label>
+                            <textarea asp-for="NewChapter.TranslatorNotes" class="form-control" rows="3" 
+                                      placeholder="Ghi chú cho người đọc (nếu có)..."></textarea>
+                            <span asp-validation-for="NewChapter.TranslatorNotes" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Thêm chương
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapters List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list me-2"></i>Danh sách chương (@Model.Chapters.Count())
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Chapters.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th width="80">Số TT</th>
+                                        <th>Tiêu đề</th>
+                                        <th width="120">Trạng thái</th>
+                                        <th width="100">Giá (coins)</th>
+                                        <th width="100">Số từ</th>
+                                        <th width="100">Lượt xem</th>
+                                        <th width="120">Ngày tạo</th>
+                                        <th width="150">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var chapter in Model.Chapters)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="badge bg-primary">@chapter.Number</span>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@chapter.Title</strong>
+                                                    @if (!string.IsNullOrEmpty(chapter.TranslatorNotes))
+                                                    {
+                                                        <small class="d-block text-muted">
+                                                            <i class="fas fa-sticky-note me-1"></i>Có ghi chú
+                                                        </small>
+                                                    }
+                                                    @if (chapter.TranslatedBy != null)
+                                                    {
+                                                        <small class="d-block text-info">
+                                                            <i class="fas fa-language me-1"></i>@chapter.TranslatedBy.FullName
+                                                        </small>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @switch (chapter.Status)
+                                                {
+                                                    case DAL.Entities.ChapterStatus.Draft:
+                                                        <span class="badge bg-secondary">Bản nháp</span>
+                                                        break;
+                                                    case DAL.Entities.ChapterStatus.Published:
+                                                        <span class="badge bg-success">Đã xuất bản</span>
+                                                        break;
+                                                    case DAL.Entities.ChapterStatus.Archived:
+                                                        <span class="badge bg-warning">Lưu trữ</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (chapter.Price > 0)
+                                                {
+                                                    <span class="text-warning">
+                                                        <i class="fas fa-coins me-1"></i>@chapter.Price.ToString("0.##")
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success">
+                                                        <i class="fas fa-gift me-1"></i>Miễn phí
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">@chapter.WordCount.ToString("N0")</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-primary">@chapter.ViewCount.ToString("N0")</span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">@chapter.CreatedAt.ToString("dd/MM/yyyy")</small>
+                                                @if (chapter.UpdatedAt.HasValue)
+                                                {
+                                                    <small class="d-block text-warning">
+                                                        Sửa: @chapter.UpdatedAt.Value.ToString("dd/MM/yyyy")
+                                                    </small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-warning edit-chapter-btn" 
+                                                            data-chapter-id="@chapter.Id"
+                                                            data-chapter-title="@chapter.Title"
+                                                            data-chapter-content="@Html.Raw(Html.Encode(chapter.Content))"
+                                                            data-chapter-status="@((int)chapter.Status)"
+                                                            data-chapter-translator="@(chapter.TranslatedById ?? 0)"
+                                                            data-chapter-notes="@Html.Raw(Html.Encode(chapter.TranslatorNotes))"
+                                                            data-chapter-price="@chapter.Price"
+                                                            title="Chỉnh sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-danger" 
+                                                            onclick="deleteChapter(@chapter.Id, '@chapter.Title')"
+                                                            title="Xóa">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-list-ol text-muted" style="font-size: 4rem;"></i>
+                            <h5 class="mt-3 text-muted">Chưa có chương nào</h5>
+                            <p class="text-muted">Hãy thêm chương đầu tiên cho tiểu thuyết này.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Chapter Modal -->
+<div class="modal fade" id="editChapterModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Update" asp-route-novelId="@Model.NovelId">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="NovelId" />
+                <input type="hidden" asp-for="EditChapter.Id" id="editChapterId" />
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>Chỉnh sửa chương
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="EditChapter.Title" class="form-label">Tiêu đề chương *</label>
+                                <input asp-for="EditChapter.Title" class="form-control" id="editChapterTitle">
+                                <span asp-validation-for="EditChapter.Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="EditChapter.Status" class="form-label">Trạng thái</label>
+                                <select asp-for="EditChapter.Status" class="form-select" id="editChapterStatus">
+                                    <option value="0">Bản nháp</option>
+                                    <option value="1">Đã xuất bản</option>
+                                    <option value="2">Lưu trữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="EditChapter.TranslatedById" class="form-label">Người dịch</label>
+                                <select asp-for="EditChapter.TranslatedById" class="form-select" id="editChapterTranslator">
+                                    <option value="">-- Chọn người dịch --</option>
+                                    @if (Model.Translators != null)
+                                    {
+                                        @foreach (var translator in Model.Translators)
+                                        {
+                                            <option value="@translator.Id">@translator.FullName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="EditChapter.Price" class="form-label">Giá chương (coins)</label>
+                                <input asp-for="EditChapter.Price" type="number" step="0.01" min="0" max="999999.99" class="form-control" id="editChapterPrice">
+                                <span asp-validation-for="EditChapter.Price" class="text-danger"></span>
+                                <small class="form-text text-muted">Để 0 cho chương miễn phí</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="EditChapter.Content" class="form-label">Nội dung chương *</label>
+                        <textarea asp-for="EditChapter.Content" class="form-control" rows="10" 
+                                  id="editChapterContent"></textarea>
+                        <span asp-validation-for="EditChapter.Content" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="EditChapter.TranslatorNotes" class="form-label">Ghi chú dịch giả</label>
+                        <textarea asp-for="EditChapter.TranslatorNotes" class="form-control" rows="3" 
+                                  id="editChapterNotes"></textarea>
+                        <span asp-validation-for="EditChapter.TranslatorNotes" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+                // Add event listeners for edit buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle edit chapter buttons
+            document.querySelectorAll('.edit-chapter-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-chapter-id');
+                    const title = this.getAttribute('data-chapter-title');
+                    const content = this.getAttribute('data-chapter-content');
+                    const status = this.getAttribute('data-chapter-status');
+                    const translatorId = this.getAttribute('data-chapter-translator');
+                    const notes = this.getAttribute('data-chapter-notes');
+                    const price = this.getAttribute('data-chapter-price');
+                    
+                    editChapter(id, title, content, status, translatorId, notes, price);
+                });
+            });
+        });
+
+        function editChapter(id, title, content, status, translatorId, notes, price) {
+            document.getElementById('editChapterId').value = id;
+            document.getElementById('editChapterTitle').value = title || '';
+            document.getElementById('editChapterContent').value = content || '';
+            document.getElementById('editChapterStatus').value = status || 0;
+            document.getElementById('editChapterTranslator').value = translatorId || '';
+            document.getElementById('editChapterNotes').value = notes || '';
+            document.getElementById('editChapterPrice').value = price || 0;
+
+            var modal = new bootstrap.Modal(document.getElementById('editChapterModal'));
+            modal.show();
+        }
+        
+        function deleteChapter(chapterId, chapterTitle) {
+            if (confirm(`Bạn có chắc chắn muốn xóa chương "${chapterTitle}"?\n\nHành động này không thể hoàn tác.`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/Staff/NovelChapters/${@Model.NovelId}?handler=Delete&novelId=${@Model.NovelId}&chapterId=${chapterId}`;
+                
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                form.appendChild(tokenInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .btn:hover {
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: box-shadow 0.15s ease-in-out;
+        }
+        
+        .card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .btn-group-sm .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.775rem;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+        }
+    </style>
+} 

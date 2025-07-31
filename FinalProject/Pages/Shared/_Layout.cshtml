@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Cosmic Novels</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FinalProject.styles.css" asp-append-version="true" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modern Black & White Navbar */
+        .cosmic-navbar {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            padding: 1rem 0;
+        }
+
+        .cosmic-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-primary) !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cosmic-brand:hover {
+            color: var(--text-secondary) !important;
+        }
+
+        .cosmic-brand-text {
+            color: var(--text-primary);
+        }
+
+        .cosmic-nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+        }
+
+        .cosmic-nav-link:hover {
+            color: var(--text-primary) !important;
+            background: var(--bg-secondary);
+            transform: translateY(-1px);
+        }
+
+        .cosmic-dropdown {
+            background: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 8px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            min-width: 200px !important;
+            margin-top: 0.5rem !important;
+            z-index: 1050 !important;
+        }
+
+        .cosmic-dropdown .dropdown-item {
+            color: var(--text-secondary) !important;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1rem !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .cosmic-dropdown .dropdown-item:hover,
+        .cosmic-dropdown .dropdown-item:focus {
+            background: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .cosmic-dropdown .dropdown-divider {
+            border-color: var(--border-color) !important;
+            margin: 0.5rem 0 !important;
+        }
+
+        .cosmic-dropdown .dropdown-header {
+            color: var(--text-primary) !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            padding: 0.75rem 1rem 0.5rem 1rem !important;
+            background: var(--bg-tertiary) !important;
+            border-radius: 6px 6px 0 0 !important;
+        }
+
+        /* User profile styling */
+        .user-profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--bg-primary);
+        }
+
+        /* Remove mobile toggler since mobile support is not needed */
+        .navbar-toggler {
+            display: none !important;
+        }
+
+        .navbar-collapse {
+            display: flex !important;
+        }
+
+        /* Ensure navbar is always expanded and horizontal */
+        .navbar-expand-sm .navbar-collapse {
+            display: flex !important;
+        }
+
+        .navbar-nav {
+            flex-direction: row !important;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item {
+            margin: 0 0.25rem;
+        }
+
+        /* Button styling for logout */
+        .btn-outline-danger {
+            color: #dc3545;
+            border-color: var(--border-color);
+            background: transparent;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background: rgba(220, 53, 69, 0.1);
+            border-color: #dc3545;
+            color: #dc3545;
+            transform: translateY(-1px);
+        }
+
+        /* Badge styling */
+        .badge.bg-warning {
+            background: #ffc107 !important;
+            color: var(--bg-primary) !important;
+        }
+
+        .badge.bg-info {
+            background: #0dcaf0 !important;
+            color: var(--bg-primary) !important;
+        }
+
+        /* Icon colors */
+        .text-warning {
+            color: #ffc107 !important;
+        }
+
+        .text-success {
+            color: #198754 !important;
+        }
+
+        .text-info {
+            color: #0dcaf0 !important;
+        }
+
+        .text-primary {
+            color: #0d6efd !important;
+        }
+
+        /* Modern Footer */
+        .cosmic-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 1.5rem 0;
+            margin-top: 0rem;
+        }
+
+        .cosmic-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cosmic-link:hover {
+            color: var(--text-secondary);
+        }
+
+        .footer-stars i {
+            color: var(--text-muted);
+            margin: 0 0.5rem;
+        }
+
+        .cosmic-brand-text {
+            color: var(--text-primary);
+        }
+    </style>
+    
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark cosmic-navbar mb-0">
+            <div class="container">
+                <a class="navbar-brand cosmic-brand" asp-area="" asp-page="/Index">
+                    <span class="cosmic-brand-text">Cosmic Novels</span>
+                </a>
+                <div class="navbar-collapse d-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <!-- Novels link accessible to all users -->
+                        <li class="nav-item">
+                            <a class="nav-link cosmic-nav-link" asp-area="" asp-page="/Novels">
+                                Thư viện
+                            </a>
+                        </li>
+                        
+                        @if (Context.Session.GetInt32("UserId").HasValue)
+                        {
+                            var userRole = Context.Session.GetString("UserRole")?.ToLower();
+                            if (userRole == "admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link cosmic-nav-link" asp-area="" asp-page="/Admin/Dashboard">
+                                        Admin Dashboard
+                                    </a>
+                                </li>
+                            }
+                            else if (userRole == "translator")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link cosmic-nav-link" asp-area="" asp-page="/Staff/Dashboard">
+                                        Staff Dashboard
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link cosmic-nav-link" asp-area="" asp-page="/User/Dashboard">
+                                        Dashboard
+                                    </a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link cosmic-nav-link" asp-area="" asp-page="/Index">
+                                    Trang chủ
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link cosmic-nav-link" asp-area="" asp-page="/Privacy">
+                                Chính sách bảo mật
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (Context.Session.GetInt32("UserId").HasValue)
+                        {
+                            <!-- Visible Logout Button -->
+                            <li class="nav-item me-2">
+                                <form method="post" asp-page="/Login" asp-page-handler="Logout" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                            
+                            <li class="nav-item dropdown">
+                                @{
+                                    var dropdownUserRole = Context.Session.GetString("UserRole");
+                                    var username = Context.Session.GetString("Username");
+                                    var fullName = Context.Session.GetString("FullName");
+                                    var userInitials = !string.IsNullOrEmpty(fullName) ? 
+                                        string.Join("", fullName.Split(' ').Take(2).Select(x => x.FirstOrDefault().ToString().ToUpper())) :
+                                        (!string.IsNullOrEmpty(username) ? username.Substring(0, Math.Min(2, username.Length)).ToUpper() : "U");
+                                }
+                                <a class="nav-link dropdown-toggle cosmic-nav-link d-flex align-items-center" 
+                                   href="#" id="navbarDropdown" role="button" 
+                                   data-bs-toggle="dropdown" aria-expanded="false"
+                                   style="text-decoration: none;">
+                                    <div class="user-profile-section">
+                                        <div class="user-avatar">@userInitials</div>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold">@username</span>
+                                            @if (!string.IsNullOrEmpty(dropdownUserRole))
+                                            {
+                                                <small class="badge bg-@(dropdownUserRole.ToLower() == "admin" ? "warning" : "info") align-self-start" style="font-size: 0.65rem;">@dropdownUserRole</small>
+                                            }
+                                        </div>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end cosmic-dropdown" aria-labelledby="navbarDropdown">
+                                    <li class="dropdown-header text-light">
+                                        @(!string.IsNullOrEmpty(fullName) ? fullName : username)
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    @if (dropdownUserRole?.ToLower() == "admin")
+                                    {
+                                        <li><a class="dropdown-item" asp-page="/Admin/Dashboard">
+                                            Admin Dashboard
+                                        </a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a class="dropdown-item" asp-page="/User/Dashboard">
+                                            Dashboard
+                                        </a></li>
+                                    }
+                                    <li><a class="dropdown-item" href="#" onclick="showProfileModal()">
+                                        Hồ sơ cá nhân
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="showCoinsModal()">
+                                        Ví Coins
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="post" asp-page="/Login" asp-page-handler="Logout" class="d-inline">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                Đăng xuất
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link cosmic-nav-link" asp-page="/Login">
+                                    Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link cosmic-nav-link" asp-page="/Register">
+                                    Đăng ký
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid p-0">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="cosmic-footer">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    &copy; 2025 - <span class="cosmic-brand-text">Cosmic Novels</span> - <a asp-area="" asp-page="/Privacy" class="cosmic-link">Privacy</a>
+                </div>
+                <div class="footer-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-satellite"></i>
+                    <i class="fas fa-rocket"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Custom Navigation Scripts -->
+    <script>
+        // Ensure dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all dropdowns
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+
+            // Handle dropdown toggle click
+            const navbarDropdown = document.getElementById('navbarDropdown');
+            if (navbarDropdown) {
+                navbarDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const dropdown = bootstrap.Dropdown.getOrCreateInstance(this);
+                    dropdown.toggle();
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+                dropdowns.forEach(function(dropdown) {
+                    if (!dropdown.contains(e.target) && !dropdown.previousElementSibling.contains(e.target)) {
+                        const dropdownInstance = bootstrap.Dropdown.getInstance(dropdown.previousElementSibling);
+                        if (dropdownInstance) {
+                            dropdownInstance.hide();
+                        }
+                    }
+                });
+            });
+        });
+
+        // Profile modal function (placeholder)
+        function showProfileModal() {
+            alert('Chức năng hồ sơ cá nhân sẽ được phát triển trong tương lai!');
+        }
+
+        // Coins modal function (placeholder)  
+        function showCoinsModal() {
+            alert('Chức năng ví Coins sẽ được phát triển trong tương lai!');
+        }
+
+        // Dropdown animation enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+            
+            dropdownMenus.forEach(function(dropdown) {
+                dropdown.addEventListener('show.bs.dropdown', function() {
+                    this.style.opacity = '0';
+                    this.style.transform = 'translateY(-10px)';
+                    this.style.transition = 'all 0.3s ease';
+                    
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.style.transform = 'translateY(0)';
+                    }, 10);
+                });
+                
+                dropdown.addEventListener('hide.bs.dropdown', function() {
+                    this.style.opacity = '0';
+                    this.style.transform = 'translateY(-10px)';
+                });
+            });
+        });
+    </script>
+
+    <!-- Include Notification Toast -->
+    @await Html.PartialAsync("_NotificationToast")
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

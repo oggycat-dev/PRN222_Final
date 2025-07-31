@@ -1,0 +1,477 @@
+@page
+@model FinalProject.Pages.LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "_Layout";
+}
+
+<!-- Modern Login Section -->
+<section class="login-section">
+    <div class="geometric-background"></div>
+    <div class="floating-elements"></div>
+    
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row justify-content-center w-100">  
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="login-card" data-aos="zoom-in">
+                    <!-- Login Header -->
+                    <div class="card-header text-center">
+                        <div class="login-icon mb-3">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h2 class="login-title">
+                            Chào mừng <span class="text-accent">trở lại</span>
+                        </h2>
+                        <p class="login-subtitle">Đăng nhập vào hệ thống của bạn</p>
+                    </div>
+
+                    <!-- Alert Messages -->
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            @Model.ErrorMessage
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @Model.SuccessMessage
+                        </div>
+                    }
+
+                    <!-- Login Form -->
+                    <div class="card-body">
+                        <form method="post" class="login-form">
+                            <div asp-validation-summary="ModelOnly" class="validation-summary mb-3"></div>
+                            
+                            <!-- Username/Email Field -->
+                            <div class="form-group mb-4">
+                                <label asp-for="LoginRequest.UsernameOrEmail" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Tên đăng nhập hoặc Email
+                                </label>
+                                <div class="input-wrapper">
+                                    <input asp-for="LoginRequest.UsernameOrEmail" 
+                                           class="form-control" 
+                                           placeholder="Nhập tên đăng nhập hoặc email" 
+                                           autocomplete="username" />
+                                </div>
+                                <span asp-validation-for="LoginRequest.UsernameOrEmail" class="validation-error"></span>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="form-group mb-4">
+                                <label asp-for="LoginRequest.Password" class="form-label">
+                                    <i class="fas fa-lock me-2"></i>Mật khẩu
+                                </label>
+                                <div class="input-wrapper">
+                                    <input asp-for="LoginRequest.Password" 
+                                           type="password" 
+                                           class="form-control" 
+                                           placeholder="Nhập mật khẩu" 
+                                           autocomplete="current-password" />
+                                </div>
+                                <span asp-validation-for="LoginRequest.Password" class="validation-error"></span>
+                            </div>
+
+                            <!-- Remember Me -->
+                            <div class="form-group mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">
+                                        Ghi nhớ đăng nhập
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Login Button -->
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    Đăng nhập
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Additional Links -->
+                        <div class="links text-center">
+                            <div class="divider mb-3">
+                                <span>hoặc</span>
+                            </div>
+                            <p class="mb-2">
+                                <span class="text-muted">Chưa có tài khoản?</span>
+                                <a asp-page="/Register" class="link-primary">
+                                    <i class="fas fa-user-plus me-1"></i>Đăng ký ngay
+                                </a>
+                            </p>
+                            <p class="mb-0">
+                                <a href="#" class="link-secondary">
+                                    <i class="fas fa-key me-1"></i>Quên mật khẩu?
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <!-- AOS Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Create floating elements
+        function createFloatingElements() {
+            const elementsContainer = document.querySelector('.floating-elements');
+            if (!elementsContainer) return;
+
+            for (let i = 0; i < 20; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                element.style.animationDelay = Math.random() * 4 + 's';
+                element.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                elementsContainer.appendChild(element);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingElements();
+        });
+
+        // Input focus effects
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <!-- AOS Animation Library CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --success-color: #10ac84;
+            --danger-color: #ff6b6b;
+        }
+
+        /* Login Section */
+        .login-section {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .geometric-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+            opacity: 0.3;
+        }
+
+        @@keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.1; }
+        }
+
+        /* Login Card */
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--text-secondary), transparent);
+        }
+
+        /* Card Header */
+        .card-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .login-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+        }
+
+        .login-title {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+        }
+
+        .alert-danger {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
+            color: var(--danger-color);
+        }
+
+        .alert-success {
+            background: rgba(16, 172, 132, 0.1);
+            border-color: rgba(16, 172, 132, 0.3);
+            color: var(--success-color);
+        }
+
+        /* Form Styling */
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Custom Checkbox */
+        .form-check {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-check-input:checked {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .form-check-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Button */
+        .btn {
+            position: relative;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: 1px solid var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Links */
+        .divider {
+            position: relative;
+            text-align: center;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+        }
+
+        .divider span {
+            background: var(--bg-primary);
+            padding: 0 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        .link-primary {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .link-primary:hover {
+            color: var(--text-secondary);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .link-secondary {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .link-secondary:hover {
+            color: var(--text-primary);
+        }
+
+        /* Validation */
+        .validation-error {
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .validation-summary {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--danger-color);
+        }
+    </style>
+} 

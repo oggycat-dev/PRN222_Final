@@ -1,0 +1,86 @@
+@page
+@model FinalProject.Pages.VNPay.PaymentReturnModel
+@{
+    ViewData["Title"] = "Kết quả thanh toán";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    @if (Model.PaymentResult.Success)
+                    {
+                        <div class="text-success mb-4">
+                            <i class="fas fa-check-circle fa-5x"></i>
+                        </div>
+                        <h2 class="text-success mb-3">Thanh toán thành công!</h2>
+                        <p class="lead text-muted mb-4">@Model.PaymentResult.Message</p>
+                        
+                        <div class="payment-details bg-light p-4 rounded mb-4">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Số tiền:</strong>
+                                </div>
+                                <div class="col-6">
+                                    @Model.PaymentResult.Amount.ToString("N0") VNĐ
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Coins nhận được:</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="text-warning fw-bold">
+                                        <i class="fas fa-coins me-1"></i>@Model.PaymentResult.Coins.ToString("N0")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Mã giao dịch:</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">@Model.PaymentResult.TransactionRef</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="/Novels" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-book me-2"></i>Về thư viện
+                        </a>
+                        <a href="/User/Dashboard" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="text-danger mb-4">
+                            <i class="fas fa-times-circle fa-5x"></i>
+                        </div>
+                        <h2 class="text-danger mb-3">Thanh toán thất bại!</h2>
+                        <p class="lead text-muted mb-4">@Model.PaymentResult.Message</p>
+                        
+                        <a href="/Novels" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-book me-2"></i>Về thư viện
+                        </a>
+                        <button onclick="history.back()" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Thử lại
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-details .row {
+        margin-bottom: 0.5rem;
+    }
+    
+    .payment-details .row:last-child {
+        margin-bottom: 0;
+    }
+</style>

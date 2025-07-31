@@ -1,0 +1,503 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\edituser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\edituser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\addnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\addnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\addnovel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\addnovel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\noveldetails.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\noveldetails.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\novelchapters.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\novelchapters.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\novelchapters.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\novelchapters.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\editnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\editnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\categories.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\categories.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\addnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\addnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\staff\\addnovel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\staff\\addnovel.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\adduser.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\adduser.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\categories.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\categories.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\editnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\editnovel.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\edituser.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\edituser.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\novelchapters.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\novelchapters.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\noveldetails.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\noveldetails.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\novels.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\novels.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\promptsessions.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\promptsessions.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\users.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\users.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\admin\\sessiondetails.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\admin\\sessiondetails.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{699277B9-2A73-486D-8A97-3B7CA824E22C}|DAL\\DAL.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\dal\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{699277B9-2A73-486D-8A97-3B7CA824E22C}|DAL\\DAL.csproj|solutionrelative:dal\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\user\\dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\user\\dashboard.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\user\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\user\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\noveldetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\noveldetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\finalproject\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{98843FC7-D92D-4D63-8C71-73AABFCE45FA}|FinalProject\\FinalProject.csproj|solutionrelative:finalproject\\pages\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{699277B9-2A73-486D-8A97-3B7CA824E22C}|DAL\\DAL.csproj|c:\\users\\oggycat.dev\\downloads\\finalproject\\dal\\dal.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{699277B9-2A73-486D-8A97-3B7CA824E22C}|DAL\\DAL.csproj|solutionrelative:dal\\dal.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Program.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Program.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Program.cs",
+              "RelativeToolTip": "FinalProject\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T15:31:12.725Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EditUser.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\EditUser.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\EditUser.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\EditUser.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\EditUser.cshtml",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAAgAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T14:33:43.747Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NovelChapters.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\NovelChapters.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\NovelChapters.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\NovelChapters.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\NovelChapters.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T14:01:29.18Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "EditNovel.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\EditNovel.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\EditNovel.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\EditNovel.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\EditNovel.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T14:01:21.221Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AddNovel.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\AddNovel.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\AddNovel.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\AddNovel.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\AddNovel.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T13:38:16.183Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AddNovel.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\AddNovel.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\AddNovel.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\AddNovel.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\AddNovel.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:17.647Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Dashboard.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\Dashboard.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\Dashboard.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\Dashboard.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\Dashboard.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T14:01:11.697Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\appsettings.json",
+              "RelativeDocumentMoniker": "FinalProject\\appsettings.json",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\appsettings.json",
+              "RelativeToolTip": "FinalProject\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-21T02:25:08.238Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "NovelChapters.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\NovelChapters.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\NovelChapters.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\NovelChapters.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\NovelChapters.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T14:01:30.705Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "NovelDetails.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\NovelDetails.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\NovelDetails.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\NovelDetails.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\NovelDetails.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T14:01:35.812Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Categories.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\Categories.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\Categories.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\Categories.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\Categories.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T14:01:06.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AddNovel.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\AddNovel.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\AddNovel.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\AddNovel.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\AddNovel.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T14:00:59.048Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AddNovel.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\AddNovel.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Staff\\AddNovel.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Staff\\AddNovel.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\Staff\\AddNovel.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T14:00:56.873Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "NovelChapters.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\NovelChapters.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\NovelChapters.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\NovelChapters.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\NovelChapters.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:37.195Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "EditUser.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\EditUser.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\EditUser.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\EditUser.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\EditUser.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:34.172Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "EditNovel.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\EditNovel.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\EditNovel.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\EditNovel.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\EditNovel.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:30.573Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Dashboard.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Dashboard.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\Dashboard.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Dashboard.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\Dashboard.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:27.503Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Categories.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Categories.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\Categories.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Categories.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\Categories.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:25.484Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AddUser.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\AddUser.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\AddUser.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\AddUser.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\AddUser.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:23.092Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "NovelDetails.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\NovelDetails.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\NovelDetails.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\NovelDetails.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\NovelDetails.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:40.169Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Novels.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Novels.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\Novels.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Novels.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\Novels.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:42.753Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "PromptSessions.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\PromptSessions.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\PromptSessions.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\PromptSessions.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\PromptSessions.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:47.302Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Users.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Users.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\Users.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\Users.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\Users.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:53.379Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "SessionDetails.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\SessionDetails.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Admin\\SessionDetails.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Admin\\SessionDetails.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\Admin\\SessionDetails.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:49.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\DAL\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "DAL\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\DAL\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "DAL\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-21T02:24:21.406Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Dashboard.cshtml.cs",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\User\\Dashboard.cshtml.cs",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\User\\Dashboard.cshtml.cs",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\User\\Dashboard.cshtml.cs",
+              "RelativeToolTip": "FinalProject\\Pages\\User\\Dashboard.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T13:38:11.44Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\User\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\User\\Dashboard.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\User\\Dashboard.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\User\\Dashboard.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T13:38:07.122Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "NovelDetails.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\NovelDetails.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\NovelDetails.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\NovelDetails.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\NovelDetails.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-29T13:37:58.847Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Login.cshtml",
+              "RelativeDocumentMoniker": "FinalProject\\Pages\\Login.cshtml",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\FinalProject\\Pages\\Login.cshtml",
+              "RelativeToolTip": "FinalProject\\Pages\\Login.cshtml",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAgwBQAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-21T02:37:48.015Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "DAL.csproj",
+              "DocumentMoniker": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\DAL\\DAL.csproj",
+              "RelativeDocumentMoniker": "DAL\\DAL.csproj",
+              "ToolTip": "C:\\Users\\OGGYCAT.DEV\\Downloads\\FinalProject\\DAL\\DAL.csproj",
+              "RelativeToolTip": "DAL\\DAL.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-07-21T02:24:29.509Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

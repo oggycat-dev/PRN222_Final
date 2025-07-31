@@ -1,0 +1,339 @@
+@page
+@model FinalProject.Pages.Admin.EditUserModel
+@{
+    ViewData["Title"] = "Chỉnh sửa người dùng";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-user-edit text-primary"></i> Chỉnh sửa người dùng</h2>
+                    <p class="text-muted mb-0">Cập nhật thông tin tài khoản người dùng</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-page="/Admin/Users" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                    </a>
+                    <a asp-page="/Admin/Dashboard" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@Model.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@Model.SuccessMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Edit User Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-cog me-2"></i>Thông tin người dùng
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <!-- Hidden fields -->
+                        <input type="hidden" asp-for="EditUserRequest.Id" />
+                        <input type="hidden" asp-for="EditUserRequest.OriginalUsername" />
+                        <input type="hidden" asp-for="EditUserRequest.OriginalEmail" />
+                        
+                        <!-- User ID Display -->
+                        <div class="mb-3">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>ID người dùng:</strong> #@Model.EditUserRequest.Id
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Username -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EditUserRequest.Username" class="form-label fw-bold">
+                                    <i class="fas fa-user text-primary me-2"></i>Tên đăng nhập
+                                </label>
+                                <input asp-for="EditUserRequest.Username" class="form-control" placeholder="Nhập tên đăng nhập" />
+                                <span asp-validation-for="EditUserRequest.Username" class="text-danger small"></span>
+                                <div class="form-text">3-50 ký tự, chỉ chữ cái, số và dấu gạch dưới</div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EditUserRequest.Email" class="form-label fw-bold">
+                                    <i class="fas fa-envelope text-info me-2"></i>Email
+                                </label>
+                                <input asp-for="EditUserRequest.Email" type="email" class="form-control" placeholder="example@domain.com" />
+                                <span asp-validation-for="EditUserRequest.Email" class="text-danger small"></span>
+                                <div class="form-text">Email để đăng nhập và liên hệ</div>
+                            </div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="EditUserRequest.FullName" class="form-label fw-bold">
+                                <i class="fas fa-id-card text-success me-2"></i>Họ và tên
+                            </label>
+                            <input asp-for="EditUserRequest.FullName" class="form-control" placeholder="Nhập họ và tên đầy đủ" />
+                            <span asp-validation-for="EditUserRequest.FullName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="mb-3">
+                            <label asp-for="EditUserRequest.Bio" class="form-label fw-bold">
+                                <i class="fas fa-info-circle text-secondary me-2"></i>Giới thiệu bản thân
+                            </label>
+                            <textarea asp-for="EditUserRequest.Bio" class="form-control" rows="3" placeholder="Chia sẻ một chút về người dùng này..."></textarea>
+                            <span asp-validation-for="EditUserRequest.Bio" class="text-danger small"></span>
+                            <div class="form-text">Tối đa 500 ký tự</div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Role -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EditUserRequest.RoleId" class="form-label fw-bold">
+                                    <i class="fas fa-user-shield text-warning me-2"></i>Vai trò
+                                </label>
+                                <select asp-for="EditUserRequest.RoleId" class="form-select">
+                                    <option value="">Chọn vai trò...</option>
+                                    @foreach (var role in Model.AvailableRoles)
+                                    {
+                                        <option value="@role.Id">@role.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="EditUserRequest.RoleId" class="text-danger small"></span>
+                                <div class="form-text">Vai trò xác định quyền hạn của người dùng</div>
+                            </div>
+
+                            <!-- Active Status -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-toggle-on text-success me-2"></i>Trạng thái
+                                </label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" asp-for="EditUserRequest.IsActive" class="form-check-input" role="switch" id="isActiveSwitch">
+                                    <label class="form-check-label" for="isActiveSwitch">
+                                        <span id="statusText">@(Model.EditUserRequest.IsActive ? "Hoạt động" : "Bị vô hiệu hóa")</span>
+                                    </label>
+                                </div>
+                                <div class="form-text">Bỏ chọn để vô hiệu hóa tài khoản người dùng</div>
+                            </div>
+                        </div>
+
+                        <!-- Password Change Info -->
+                        <div class="alert alert-warning mb-4">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Lưu ý:</strong> Để thay đổi mật khẩu của người dùng, vui lòng sử dụng chức năng đặt lại mật khẩu riêng biệt.
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-page="/Admin/Users" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-times me-2"></i>Hủy bỏ
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Safety Guidelines Card -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card border-left-warning">
+                <div class="card-body">
+                    <h6 class="card-title text-warning">
+                        <i class="fas fa-shield-alt me-2"></i>Hướng dẫn chỉnh sửa an toàn
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-success">✓ Nên làm:</h6>
+                            <ul class="list-unstyled text-muted small">
+                                <li><i class="fas fa-check text-success me-2"></i>Kiểm tra thông tin trước khi lưu</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Chỉ gán vai trò phù hợp</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Xác nhận email hợp lệ</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Cân nhắc trước khi vô hiệu hóa</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-danger">⚠ Lưu ý:</h6>
+                            <ul class="list-unstyled text-muted small">
+                                <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Không vô hiệu hóa admin cuối cùng</li>
+                                <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Kiểm tra vai trò trước khi thay đổi</li>
+                                <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Tên đăng nhập phải duy nhất</li>
+                                <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Email không được trùng lặp</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Status switch text update
+            const statusSwitch = document.getElementById('isActiveSwitch');
+            const statusText = document.getElementById('statusText');
+            
+            if (statusSwitch && statusText) {
+                statusSwitch.addEventListener('change', function() {
+                    statusText.textContent = this.checked ? 'Hoạt động' : 'Bị vô hiệu hóa';
+                    statusText.className = this.checked ? 'text-success' : 'text-muted';
+                });
+            }
+
+            // Character counter for bio
+            const bioTextarea = document.querySelector('textarea[name="EditUserRequest.Bio"]');
+            if (bioTextarea) {
+                const maxLength = 500;
+                const counter = document.createElement('div');
+                counter.className = 'form-text text-end';
+                counter.innerHTML = `<span id="bioCounter">${bioTextarea.value.length}</span>/${maxLength} ký tự`;
+                bioTextarea.parentNode.insertBefore(counter, bioTextarea.nextSibling);
+
+                bioTextarea.addEventListener('input', function() {
+                    const currentLength = this.value.length;
+                    document.getElementById('bioCounter').textContent = currentLength;
+                    
+                    if (currentLength > maxLength * 0.9) {
+                        counter.classList.add('text-warning');
+                    } else {
+                        counter.classList.remove('text-warning');
+                    }
+                });
+            }
+
+            // Confirm role change for admin users
+            const roleSelect = document.querySelector('select[name="EditUserRequest.RoleId"]');
+            const originalRole = roleSelect.value;
+            
+            roleSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const roleName = selectedOption.text;
+                
+                if (originalRole === "1" && this.value !== "1") { // Assuming admin role ID is 1
+                    if (!confirm(`Bạn có chắc chắn muốn thay đổi vai trò từ Admin sang ${roleName}? Điều này có thể ảnh hưởng đến quyền hạn của người dùng.`)) {
+                        this.value = originalRole;
+                    }
+                }
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        
+        .border-left-warning {
+            border-left: 4px solid #ffc107 !important;
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .form-label {
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .form-check-input:checked {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        
+        .form-check-input:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        .alert-info {
+            background-color: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-color: rgba(255, 193, 7, 0.2);
+            color: #856404;
+        }
+        
+        .text-primary {
+            color: #667eea !important;
+        }
+        
+        .shadow-lg {
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+        }
+        
+        .needs-validation .form-control:invalid {
+            border-color: #dc3545;
+        }
+        
+        .needs-validation .form-control:valid {
+            border-color: #28a745;
+        }
+    </style>
+} 

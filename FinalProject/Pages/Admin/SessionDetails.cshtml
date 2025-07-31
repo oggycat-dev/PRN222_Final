@@ -1,0 +1,376 @@
+@page
+@model FinalProject.Pages.Admin.SessionDetailsModel
+@{
+    ViewData["Title"] = "Chi tiết phiên chat";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-comment-dots text-info"></i> Chi tiết phiên chat</h2>
+                    <p class="text-muted mb-0">Xem chi tiết và tất cả tin nhắn trong phiên chat</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-page="/Admin/PromptSessions" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                    </a>
+                    <a asp-page="/Admin/Dashboard" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (!string.IsNullOrEmpty(TempData["SuccessMessage"]?.ToString()))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.SessionDetail != null)
+    {
+        <!-- Session Information Card -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gradient-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Thông tin phiên chat
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">ID phiên chat:</label>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-light text-dark fs-6">#@Model.SessionDetail.Id</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Trạng thái:</label>
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if (Model.SessionDetail.IsActive)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-play"></i> Hoạt động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-pause"></i> Vô hiệu hóa
+                                                </span>
+                                            }
+                                            <form method="post" asp-page-handler="ToggleSessionStatus" class="d-inline">
+                                                <input type="hidden" name="sessionId" value="@Model.SessionDetail.Id" />
+                                                <button type="submit" class="btn btn-sm @(Model.SessionDetail.IsActive ? "btn-outline-warning" : "btn-outline-success")" 
+                                                        onclick="return confirm('@(Model.SessionDetail.IsActive ? "Vô hiệu hóa" : "Kích hoạt") phiên chat này?')"
+                                                        title="@(Model.SessionDetail.IsActive ? "Vô hiệu hóa" : "Kích hoạt") phiên chat">
+                                                    <i class="fas fa-@(Model.SessionDetail.IsActive ? "pause" : "play")"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tiêu đề:</label>
+                                    <p class="form-control-plaintext">@Model.SessionDetail.Title</p>
+                                </div>
+                                
+                                @if (!string.IsNullOrEmpty(Model.SessionDetail.Description))
+                                {
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Mô tả:</label>
+                                        <p class="form-control-plaintext">@Model.SessionDetail.Description</p>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-user text-primary"></i> Thông tin người dùng
+                                        </h6>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="avatar-md me-3">
+                                                <div class="avatar-title bg-primary rounded-circle">
+                                                    @Model.SessionDetail.Username.FirstOrDefault().ToString().ToUpper()
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <strong>@Model.SessionDetail.Username</strong>
+                                                <br><small class="text-muted">@Model.SessionDetail.UserFullName</small>
+                                                <br><small class="text-muted">@Model.SessionDetail.UserEmail</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Ngày tạo:</small>
+                                            <div class="fw-bold">@Model.SessionDetail.CreatedAt.ToString("dd/MM/yyyy")</div>
+                                            <small class="text-muted">@Model.SessionDetail.CreatedAt.ToString("HH:mm:ss")</small>
+                                        </div>
+                                        @if (Model.SessionDetail.UpdatedAt.HasValue)
+                                        {
+                                            <div class="col-6">
+                                                <small class="text-muted">Cập nhật:</small>
+                                                <div class="fw-bold">@Model.SessionDetail.UpdatedAt.Value.ToString("dd/MM/yyyy")</div>
+                                                <small class="text-muted">@Model.SessionDetail.UpdatedAt.Value.ToString("HH:mm:ss")</small>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-comments"></i> Tin nhắn trong phiên chat (@Model.Messages.Count)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Messages.Any())
+                        {
+                            <div class="chat-container">
+                                @foreach (var message in Model.Messages)
+                                {
+                                    <div class="message-item @(message.MessageType.ToLower() == "user" ? "message-user" : "message-ai")">
+                                        <div class="message-header">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm me-2">
+                                                    @if (message.MessageType.ToLower() == "user")
+                                                    {
+                                                        <div class="avatar-title bg-primary rounded-circle">
+                                                            @message.Username.FirstOrDefault().ToString().ToUpper()
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="avatar-title bg-secondary rounded-circle">
+                                                            <i class="fas fa-robot"></i>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <strong>
+                                                        @if (message.MessageType.ToLower() == "user")
+                                                        {
+                                                            @message.UserFullName
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>AI Assistant</span>
+                                                        }
+                                                    </strong>
+                                                    <div class="message-meta">
+                                                        <small class="text-muted">
+                                                            @message.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")
+                                                            @if (message.IsEdited && message.EditedAt.HasValue)
+                                                            {
+                                                                <span class="badge bg-warning text-dark ms-1">
+                                                                    <i class="fas fa-edit"></i> Đã chỉnh sửa @message.EditedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                                                </span>
+                                                            }
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="message-id">
+                                                    <span class="badge bg-light text-dark">#@message.Id</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="message-content">
+                                            @Html.Raw(System.Web.HttpUtility.HtmlEncode(message.Content).Replace("\n", "<br>"))
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-comment fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Phiên chat này chưa có tin nhắn nào</h5>
+                                <p class="text-muted">Người dùng chưa bắt đầu cuộc trò chuyện trong phiên này.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Không thể tải thông tin phiên chat. Vui lòng thử lại.
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .bg-gradient-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+        }
+        
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .avatar-md {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .avatar-title {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .avatar-sm .avatar-title {
+            font-size: 0.875rem;
+        }
+        
+        .avatar-md .avatar-title {
+            font-size: 1.2rem;
+        }
+        
+        .chat-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .message-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            position: relative;
+        }
+        
+        .message-user {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-left: 4px solid #2196f3;
+            margin-left: 0;
+            margin-right: 2rem;
+        }
+        
+        .message-ai {
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+            border-left: 4px solid #4caf50;
+            margin-left: 2rem;
+            margin-right: 0;
+        }
+        
+        .message-header {
+            margin-bottom: 0.75rem;
+        }
+        
+        .message-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .message-meta {
+            font-size: 0.8rem;
+        }
+        
+        .message-id {
+            opacity: 0.7;
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-control-plaintext {
+            border: 1px solid #e9ecef;
+            border-radius: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background-color: #f8f9fa;
+            margin-bottom: 0;
+        }
+        
+        /* Scrollbar styling for chat container */
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+} 

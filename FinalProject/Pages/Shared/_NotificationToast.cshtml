@@ -1,0 +1,116 @@
+<!-- Toast Container for Notifications -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11;">
+    <div id="notification-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i id="toast-icon" class="fas fa-bell text-primary me-2"></i>
+            <strong id="toast-title" class="me-auto">Thông báo</strong>
+            <small id="toast-time" class="text-muted">vừa xong</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toast-message">
+            <!-- Message content will be set by JavaScript -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.0/signalr.min.js"></script>
+    <script>
+        // Initialize SignalR connection for notifications
+        const notificationConnection = new signalR.HubConnectionBuilder()
+            .withUrl('/notificationhub')
+            .withAutomaticReconnect()
+            .build();
+
+        // Start the connection
+        notificationConnection.start()
+            .then(function () {
+                console.log('✅ Connected to notification hub');
+                console.log('Connection ID:', notificationConnection.connectionId);
+                console.log('Connection State:', notificationConnection.state);
+            })
+            .catch(function (err) {
+                console.error('❌ Error connecting to notification hub:', err);
+            });
+
+        // Listen for new notifications
+        notificationConnection.on('NewNotification', function (notification) {
+            console.log('📢 New notification received:', notification);
+            showNotification(notification);
+        });
+
+        // Function to show notification toast
+        function showNotification(notification) {
+            const toast = document.getElementById('notification-toast');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+            const toastTime = document.getElementById('toast-time');
+
+            // Set icon based on notification type
+            if (notification.Type === 'NovelAdded') {
+                toastIcon.className = 'fas fa-book text-success me-2';
+            } else if (notification.Type === 'ChapterAdded') {
+                toastIcon.className = 'fas fa-plus-circle text-info me-2';
+            } else if (notification.Type === 'NovelUpdated') {
+                toastIcon.className = 'fas fa-edit text-warning me-2';
+            } else {
+                toastIcon.className = 'fas fa-bell text-primary me-2';
+            }
+
+            // Set content
+            toastTitle.textContent = notification.Title;
+            toastMessage.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <p class="mb-1">${notification.Message}</p>
+                        ${notification.NovelId ? `<small class="text-muted">Nhấn để xem sách</small>` : ''}
+                    </div>
+                </div>
+            `;
+            toastTime.textContent = 'vừa xong';
+
+            // Add click handler to navigate to novel if available
+            if (notification.NovelId) {
+                toast.style.cursor = 'pointer';
+                toast.onclick = function() {
+                    window.location.href = `/NovelDetails?id=${notification.NovelId}`;
+                };
+            }
+
+            // Show the toast
+            const bsToast = new bootstrap.Toast(toast, {
+                delay: 5000,
+                autohide: true
+            });
+            bsToast.show();
+
+            // Play notification sound (optional)
+            try {
+                // You can add a notification sound here
+                // const audio = new Audio('/sounds/notification.mp3');
+                // audio.play().catch(e => console.log('Could not play notification sound'));
+            } catch (e) {
+                console.log('Notification sound not available');
+            }
+        }
+
+        // Handle connection errors
+        notificationConnection.onclose(function (error) {
+            if (error) {
+                console.error('❌ Notification connection closed with error:', error);
+            } else {
+                console.log('📴 Notification connection closed');
+            }
+        });
+
+        // Handle reconnection
+        notificationConnection.onreconnecting(function (error) {
+            console.log('🔄 Attempting to reconnect notification hub...', error);
+        });
+
+        notificationConnection.onreconnected(function (connectionId) {
+            console.log('✅ Reconnected to notification hub:', connectionId);
+        });
+    </script>
+}

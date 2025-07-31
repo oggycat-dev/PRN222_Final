@@ -1,0 +1,255 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Chính sách bảo mật";
+}
+
+<!-- Modern Privacy Section -->
+<section class="privacy-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <div class="privacy-card">
+                    <div class="privacy-header text-center mb-5">
+                        <div class="privacy-icon mb-3">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h1 class="privacy-title">Chính sách bảo mật</h1>
+                        <p class="privacy-subtitle">Cam kết bảo vệ thông tin cá nhân của bạn</p>
+                    </div>
+
+                    <div class="privacy-content">
+                        <div class="content-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle me-2"></i>Giới thiệu
+                            </h3>
+                            <p>
+                                Tại Cosmic Novels, chúng tôi cam kết bảo vệ quyền riêng tư và thông tin cá nhân của người dùng. 
+                                Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng, và bảo vệ thông tin của bạn 
+                                khi sử dụng dịch vụ của chúng tôi.
+                            </p>
+                        </div>
+
+                        <div class="content-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-database me-2"></i>Thu thập thông tin
+                            </h3>
+                            <p>Chúng tôi có thể thu thập các loại thông tin sau:</p>
+                            <ul class="privacy-list">
+                                <li>Thông tin cá nhân: tên, địa chỉ email, thông tin tài khoản</li>
+                                <li>Thông tin sử dụng: hoạt động đọc, sở thích, tương tác với nội dung</li>
+                                <li>Thông tin kỹ thuật: địa chỉ IP, loại trình duyệt, thiết bị sử dụng</li>
+                                <li>Cookies và công nghệ theo dõi tương tự</li>
+                            </ul>
+                        </div>
+
+                        <div class="content-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-cogs me-2"></i>Sử dụng thông tin
+                            </h3>
+                            <p>Thông tin thu thập được sử dụng để:</p>
+                            <ul class="privacy-list">
+                                <li>Cung cấp và cải thiện dịch vụ</li>
+                                <li>Cá nhân hóa trải nghiệm người dùng</li>
+                                <li>Gửi thông báo và cập nhật quan trọng</li>
+                                <li>Phân tích và cải thiện hiệu suất trang web</li>
+                                <li>Tuân thủ nghĩa vụ pháp lý</li>
+                            </ul>
+                        </div>
+
+                        <div class="content-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-envelope me-2"></i>Liên hệ
+                            </h3>
+                            <p>
+                                Nếu bạn có bất kỳ câu hỏi nào về chính sách bảo mật này, 
+                                vui lòng liên hệ với chúng tôi qua email: privacy@cosmicnovels.com
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="privacy-actions text-center mt-5">
+                        <a href="/" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i>Về trang chủ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .privacy-section {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .privacy-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .privacy-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .privacy-header {
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 2rem;
+        }
+
+        .privacy-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--text-primary);
+            font-size: 2.5rem;
+        }
+
+        .privacy-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .privacy-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .privacy-content {
+            margin-top: 2rem;
+        }
+
+        .content-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .privacy-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .privacy-list li {
+            color: var(--text-secondary);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .privacy-list li:before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0.5rem;
+        }
+
+        .privacy-list li:last-child {
+            border-bottom: none;
+        }
+
+        .privacy-actions {
+            border-top: 1px solid var(--card-border);
+            padding-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--text-secondary);
+            color: var(--bg-primary);
+        }
+    </style>
+}

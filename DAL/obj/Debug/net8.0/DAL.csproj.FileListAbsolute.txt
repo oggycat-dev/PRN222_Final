@@ -1,0 +1,14 @@
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\bin\Debug\net8.0\DAL.deps.json
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\bin\Debug\net8.0\DAL.runtimeconfig.json
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\bin\Debug\net8.0\DAL.dll
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\bin\Debug\net8.0\DAL.pdb
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.csproj.AssemblyReference.cache
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.AssemblyInfoInputs.cache
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.AssemblyInfo.cs
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.dll
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\refint\DAL.dll
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.pdb
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\DAL.genruntimeconfig.cache
+C:\Users\OGGYCAT.DEV\Downloads\FinalProject\DAL\obj\Debug\net8.0\ref\DAL.dll

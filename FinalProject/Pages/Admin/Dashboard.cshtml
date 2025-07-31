@@ -1,0 +1,1117 @@
+@page
+@model FinalProject.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Bảng điều khiển Admin";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Admin Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-cogs text-danger"></i> Admin Dashboard</h2>
+                    <p class="text-muted mb-0">Chào mừng Admin <strong>@Model.FullName</strong> | Role: <span class="badge bg-danger">@Model.UserRole</span></p>
+                </div>
+                <form method="post" asp-page="/Login" asp-page-handler="Logout" class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-filter"></i> Bộ lọc thống kê
+                        </h5>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="toggleFilters">
+                            <i class="fas fa-eye"></i> Ẩn/Hiện bộ lọc
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" id="filterContainer">
+                    <form method="get" id="filterForm">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="startDate" class="form-label">Từ ngày:</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" 
+                                       value="@Model.StartDate?.ToString("yyyy-MM-dd")">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="endDate" class="form-label">Đến ngày:</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" 
+                                       value="@Model.EndDate?.ToString("yyyy-MM-dd")">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filterType" class="form-label">Loại thống kê:</label>
+                                <select class="form-control" id="filterType" name="filterType">
+                                    <option value="all" selected="@(Model.FilterType == "all")">Tất cả</option>
+                                    <option value="users" selected="@(Model.FilterType == "users")">Người dùng</option>
+                                    <option value="novels" selected="@(Model.FilterType == "novels")">Tiểu thuyết</option>
+                                    <option value="chapters" selected="@(Model.FilterType == "chapters")">Chương</option>
+                                    <option value="messages" selected="@(Model.FilterType == "messages")">Tin nhắn</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <div class="btn-group w-100" role="group">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-search"></i> Lọc
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="resetFilter">
+                                        <i class="fas fa-undo"></i> Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="setQuickFilter('today')">Hôm nay</button>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="setQuickFilter('week')">Tuần này</button>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="setQuickFilter('month')">Tháng này</button>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="setQuickFilter('year')">Năm này</button>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-dark btn-sm" id="toggleAll">
+                                            <i class="fas fa-eye-slash"></i> Ẩn/Hiện tất cả
+                                        </button>
+                                        <button type="button" class="btn btn-info btn-sm" id="toggleCards">
+                                            <i class="fas fa-eye-slash"></i> Thẻ thống kê
+                                        </button>
+                                        <button type="button" class="btn btn-warning btn-sm" id="toggleCharts">
+                                            <i class="fas fa-eye-slash"></i> Biểu đồ
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-sm" id="toggleControls">
+                                            <i class="fas fa-eye-slash"></i> Quản lý
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" id="toggleActivities">
+                                            <i class="fas fa-eye-slash"></i> Hoạt động
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="toggleAIPricing">
+                                            <i class="fas fa-eye-slash"></i> Cấu hình AI
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Pricing Settings -->
+    <div class="row mb-4" id="aiPricingSection">
+        <div class="col-12">
+            <div class="card border-warning">
+                <div class="card-header bg-warning">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-robot"></i> Cài đặt giá AI
+                        </h5>
+                        <button type="button" class="btn btn-sm btn-outline-dark" id="toggleAIPricing">
+                            <i class="fas fa-eye"></i> Ẩn/Hiện cài đặt
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" id="aiPricingContainer">
+                    <form method="post" asp-page-handler="UpdateAIPricing" id="aiPricingForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="SummarizeCost" class="form-label">
+                                    <i class="fas fa-compress-alt text-success"></i> Giá tóm tắt (coin):
+                                </label>
+                                <input type="number" class="form-control" id="SummarizeCost" name="SummarizeCost" 
+                                       value="@Model.SummarizeCost" min="0" max="1000">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="TranslateCost" class="form-label">
+                                    <i class="fas fa-language text-info"></i> Giá dịch thuật (coin):
+                                </label>
+                                <input type="number" class="form-control" id="TranslateCost" name="TranslateCost" 
+                                       value="@Model.TranslateCost" min="0" max="1000">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="DefaultCost" class="form-label">
+                                    <i class="fas fa-cog text-secondary"></i> Giá mặc định (coin):
+                                </label>
+                                <input type="number" class="form-control" id="DefaultCost" name="DefaultCost" 
+                                       value="@Model.DefaultCost" min="0" max="1000">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-save"></i> Cập nhật giá AI
+                                </button>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle"></i> 
+                                        Lưu ý: Thay đổi giá sẽ áp dụng cho các yêu cầu AI tiếp theo.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Stats Cards -->
+    <div class="row mb-4" id="statsCards">
+        <div class="col-3">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng người dùng</div>
+                            <div class="h5">@Model.TotalUsers</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-3">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Người dùng hoạt động</div>
+                            <div class="h5">@Model.ActiveUsers</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng phiên chat</div>
+                            <div class="h5">@Model.TotalSessions</div>
+                            <div class="small text-white-50">Hoạt động: @Model.ActiveSessions</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-comments fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng tin nhắn</div>
+                            <div class="h5">@Model.TotalMessages</div>
+                            <div class="small text-white-50">Hôm nay: @Model.TodayMessages</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-envelope fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novel & Chapter Statistics Row -->
+    <div class="row mb-4" id="novelStats">
+        <div class="col-3">
+            <div class="card bg-gradient-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng tiểu thuyết</div>
+                            <div class="h5">@Model.TotalNovels</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-book fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-gradient-success text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng chương</div>
+                            <div class="h5">@Model.TotalChapters</div>
+                            <div class="small text-white-50">Đã xuất bản: @Model.PublishedChapters</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-file-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-warning text-dark mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-dark">Chương có phí</div>
+                            <div class="h5 text-dark">@Model.PaidChapters</div>
+                            <div class="small text-dark">Miễn phí: @Model.FreeChapters</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-coins fa-2x text-dark"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-gradient-dark text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng doanh thu (coins)</div>
+                            <div class="h5">@Model.TotalChapterRevenue.ToString("N2")</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Statistics Row -->
+    <div class="row mb-4" id="additionalStats">
+        <div class="col-3">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Phiên chat hôm nay</div>
+                            <div class="h5">@Model.SessionsToday</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-calendar-day fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-secondary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tin nhắn người dùng</div>
+                            <div class="h5">@Model.UserMessages</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-edit fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-dark text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Phản hồi AI</div>
+                            <div class="h5">@Model.AIMessages</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-robot fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tỷ lệ phản hồi</div>
+                            <div class="h5">@(Model.UserMessages > 0 ? Math.Round((double)Model.AIMessages / Model.UserMessages * 100, 1) : 0)%</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-percentage fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Dashboard -->
+    <div class="row mb-4" id="analyticsCharts">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-bar"></i> Phân tích thống kê novel & chapter
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Novel & Chapter Overview Chart -->
+                        <div class="col-6 mb-4">
+                            <div class="chart-container">
+                                <h6 class="text-center mb-3">Thống kê Novel & Chapter</h6>
+                                <canvas id="novelChapterChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chapter Price Distribution Chart -->
+                        <div class="col-6 mb-4">
+                            <div class="chart-container">
+                                <h6 class="text-center mb-3">Phân bố giá chapter</h6>
+                                <canvas id="chapterPriceChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Analytics Dashboard -->
+    <div class="row mb-4" id="systemCharts">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line"></i> Phân tích thống kê hệ thống
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Message Distribution Chart -->
+                        <div class="col-4 mb-4">
+                            <div class="chart-container">
+                                <h6 class="text-center mb-3">Phân bố tin nhắn</h6>
+                                <canvas id="messageDistributionChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- User Activity Chart -->
+                        <div class="col-4 mb-4">
+                            <div class="chart-container">
+                                <h6 class="text-center mb-3">Hoạt động người dùng</h6>
+                                <canvas id="userActivityChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- System Overview Chart -->
+                        <div class="col-4 mb-4">
+                            <div class="chart-container">
+                                <h6 class="text-center mb-3">Tổng quan hệ thống</h6>
+                                <canvas id="systemOverviewChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Controls -->
+    <div class="row" id="adminControls">
+        <!-- Novel Management -->
+        <div class="col-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-book"></i> Quản lý tiểu thuyết
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center border-success management-card">
+                                <div class="card-body">
+                                    <i class="fas fa-book-open fa-3x text-success mb-3"></i>
+                                    <h6>Danh sách tiểu thuyết</h6>
+                                    <p class="text-muted">Xem và quản lý tất cả tiểu thuyết</p>
+                                    <a asp-page="/Admin/Novels" class="btn btn-success">
+                                        <i class="fas fa-list me-2"></i>Xem danh sách
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center border-primary management-card">
+                                <div class="card-body">
+                                    <i class="fas fa-plus-circle fa-3x text-primary mb-3"></i>
+                                    <h6>Thêm tiểu thuyết mới</h6>
+                                    <p class="text-muted">Thêm tác phẩm mới vào thư viện</p>
+                                    <a asp-page="/Admin/AddNovel" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Thêm mới
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center border-warning management-card">
+                                <div class="card-body">
+                                    <i class="fas fa-tags fa-3x text-warning mb-3"></i>
+                                    <h6>Quản lý thể loại</h6>
+                                    <p class="text-muted">Thêm và chỉnh sửa thể loại</p>
+                                    <a asp-page="/Admin/Categories" class="btn btn-warning">
+                                        <i class="fas fa-cogs me-2"></i>Quản lý
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="col-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users-cog"></i> Quản lý người dùng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center border-primary management-card">
+                                <div class="card-body">
+                                    <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                                    <h6>Thêm người dùng mới</h6>
+                                    <p class="text-muted">Tạo tài khoản cho người dùng mới</p>
+                                    <a asp-page="/Admin/AddUser" class="btn btn-primary">Thêm người dùng</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center border-info management-card">
+                                <div class="card-body">
+                                    <i class="fas fa-list fa-3x text-info mb-3"></i>
+                                    <h6>Danh sách người dùng</h6>
+                                    <p class="text-muted">Xem và quản lý tất cả người dùng</p>
+                                    <a asp-page="/Admin/Users" class="btn btn-info">Xem danh sách</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center border-warning management-card">
+                                <div class="card-body">
+                                    <i class="fas fa-comments fa-3x text-warning mb-3"></i>
+                                    <h6>Quản lý phiên chat</h6>
+                                    <p class="text-muted">Xem và quản lý tất cả phiên chat</p>
+                                    <a asp-page="/Admin/PromptSessions" class="btn btn-warning">Xem phiên chat</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row mt-4" id="recentActivities">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-history"></i> Hoạt động gần đây
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Người dùng</th>
+                                    <th>Hoạt động</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@Model.Username</td>
+                                    <td>Đăng nhập hệ thống</td>
+                                    <td><span class="badge bg-success">Thành công</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        <i class="fas fa-info-circle"></i> Không có hoạt động khác gần đây
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Message Distribution Chart (Doughnut)
+            const messageDistributionCtx = document.getElementById('messageDistributionChart').getContext('2d');
+            const messageDistributionData = @Html.Raw(Model.MessageDistributionChartData);
+            
+            new Chart(messageDistributionCtx, {
+                type: 'doughnut',
+                data: messageDistributionData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                }
+            });
+
+            // User Activity Chart (Pie)
+            const userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+            const userActivityData = @Html.Raw(Model.UserActivityChartData);
+            
+            new Chart(userActivityCtx, {
+                type: 'pie',
+                data: userActivityData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                }
+            });
+
+            // System Overview Chart (Radar)
+            const systemOverviewCtx = document.getElementById('systemOverviewChart').getContext('2d');
+            const systemOverviewData = @Html.Raw(Model.SystemOverviewChartData);
+            
+            new Chart(systemOverviewCtx, {
+                type: 'radar',
+                data: systemOverviewData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                color: '#333',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+
+            // Novel & Chapter Chart (Bar)
+            const novelChapterCtx = document.getElementById('novelChapterChart').getContext('2d');
+            const novelChapterData = @Html.Raw(Model.NovelChapterChartData);
+            
+            new Chart(novelChapterCtx, {
+                type: 'bar',
+                data: novelChapterData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+
+            // Chapter Price Distribution Chart (Doughnut)
+            const chapterPriceCtx = document.getElementById('chapterPriceChart').getContext('2d');
+            const chapterPriceData = @Html.Raw(Model.ChapterPriceChartData);
+            
+            new Chart(chapterPriceCtx, {
+                type: 'doughnut',
+                data: chapterPriceData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed * 100) / total).toFixed(1);
+                                    return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                }
+            });
+
+            // Add some styling animations
+            setTimeout(() => {
+                document.querySelectorAll('.card').forEach((card, index) => {
+                    card.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s both`;
+                });
+            }, 100);
+        });
+
+        // Filter and toggle functionality
+        $(document).ready(function() {
+            // Toggle filter container
+            $('#toggleFilters').on('click', function() {
+                $('#filterContainer').slideToggle();
+                const icon = $(this).find('i');
+                if (icon.hasClass('fa-eye')) {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            // Toggle cards visibility
+            $('#toggleCards').on('click', function() {
+                $('#statsCards, #novelStats, #additionalStats').fadeToggle();
+                const icon = $(this).find('i');
+                if (icon.hasClass('fa-eye-slash')) {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).html('<i class="fas fa-eye"></i> Thẻ thống kê');
+                } else {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).html('<i class="fas fa-eye-slash"></i> Thẻ thống kê');
+                }
+            });
+
+            // Toggle charts visibility
+            $('#toggleCharts').on('click', function() {
+                $('#analyticsCharts, #systemCharts').fadeToggle();
+                const icon = $(this).find('i');
+                if (icon.hasClass('fa-eye-slash')) {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).html('<i class="fas fa-eye"></i> Biểu đồ');
+                } else {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).html('<i class="fas fa-eye-slash"></i> Biểu đồ');
+                }
+            });
+
+            // Toggle admin controls visibility
+            $('#toggleControls').on('click', function() {
+                $('#adminControls').fadeToggle();
+                const icon = $(this).find('i');
+                if (icon.hasClass('fa-eye-slash')) {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).html('<i class="fas fa-eye"></i> Quản lý');
+                } else {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).html('<i class="fas fa-eye-slash"></i> Quản lý');
+                }
+            });
+
+            // Toggle recent activities visibility
+            $('#toggleActivities').on('click', function() {
+                $('#recentActivities').fadeToggle();
+                const icon = $(this).find('i');
+                if (icon.hasClass('fa-eye-slash')) {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).html('<i class="fas fa-eye"></i> Hoạt động');
+                } else {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).html('<i class="fas fa-eye-slash"></i> Hoạt động');
+                }
+            });
+
+            // Toggle AI pricing visibility
+            $('#toggleAIPricing').on('click', function() {
+                $('#aiPricingSection').fadeToggle();
+                const icon = $(this).find('i');
+                if (icon.hasClass('fa-eye-slash')) {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).html('<i class="fas fa-eye"></i> Cấu hình AI');
+                } else {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).html('<i class="fas fa-eye-slash"></i> Cấu hình AI');
+                }
+            });
+
+            // Toggle all sections visibility
+            $('#toggleAll').on('click', function() {
+                const allSections = $('#statsCards, #novelStats, #additionalStats, #analyticsCharts, #systemCharts, #adminControls, #recentActivities, #aiPricingSection');
+                allSections.fadeToggle();
+                
+                const icon = $(this).find('i');
+                const isCurrentlyVisible = allSections.first().is(':visible');
+                
+                if (isCurrentlyVisible) {
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                    $(this).html('<i class="fas fa-eye-slash"></i> Ẩn/Hiện tất cả');
+                    // Update all other buttons to show "hidden" state
+                    $('#toggleCards').html('<i class="fas fa-eye"></i> Thẻ thống kê');
+                    $('#toggleCharts').html('<i class="fas fa-eye"></i> Biểu đồ');
+                    $('#toggleControls').html('<i class="fas fa-eye"></i> Quản lý');
+                    $('#toggleActivities').html('<i class="fas fa-eye"></i> Hoạt động');
+                    $('#toggleAIPricing').html('<i class="fas fa-eye"></i> Cấu hình AI');
+                } else {
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                    $(this).html('<i class="fas fa-eye"></i> Ẩn/Hiện tất cả');
+                    // Update all other buttons to show "visible" state
+                    $('#toggleCards').html('<i class="fas fa-eye-slash"></i> Thẻ thống kê');
+                    $('#toggleCharts').html('<i class="fas fa-eye-slash"></i> Biểu đồ');
+                    $('#toggleControls').html('<i class="fas fa-eye-slash"></i> Quản lý');
+                    $('#toggleActivities').html('<i class="fas fa-eye-slash"></i> Hoạt động');
+                    $('#toggleAIPricing').html('<i class="fas fa-eye-slash"></i> Cấu hình AI');
+                }
+            });
+
+            // Reset filter
+            $('#resetFilter').on('click', function() {
+                $('#startDate, #endDate').val('');
+                $('#filterType').val('all');
+                $('#filterForm').submit();
+            });
+
+            // Auto-submit form when filter type changes
+            $('#filterType').on('change', function() {
+                $('#filterForm').submit();
+            });
+        });
+
+        // Quick filter functions
+        function setQuickFilter(period) {
+            const today = new Date();
+            let startDate, endDate = today;
+
+            switch(period) {
+                case 'today':
+                    startDate = today;
+                    break;
+                case 'week':
+                    startDate = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'month':
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    break;
+                case 'year':
+                    startDate = new Date(today.getFullYear(), 0, 1);
+                    break;
+            }
+
+            $('#startDate').val(startDate.toISOString().split('T')[0]);
+            $('#endDate').val(endDate.toISOString().split('T')[0]);
+            $('#filterForm').submit();
+        }
+
+        // Filter cards based on type
+        function filterCards() {
+            const filterType = $('#filterType').val();
+            
+            // Hide all cards first
+            $('#statsCards .col-3, #novelStats .col-3, #additionalStats .col-3').hide();
+            
+            switch(filterType) {
+                case 'all':
+                    $('#statsCards .col-3, #novelStats .col-3, #additionalStats .col-3').show();
+                    break;
+                case 'users':
+                    $('#statsCards .col-3:has(.fa-users), #statsCards .col-3:has(.fa-user-check)').show();
+                    $('#additionalStats .col-3:has(.fa-user-edit)').show();
+                    break;
+                case 'novels':
+                    $('#novelStats .col-3:has(.fa-book), #novelStats .col-3:has(.fa-chart-line)').show();
+                    break;
+                case 'chapters':
+                    $('#novelStats .col-3:has(.fa-file-alt), #novelStats .col-3:has(.fa-coins)').show();
+                    break;
+                case 'messages':
+                    $('#statsCards .col-3:has(.fa-envelope), #statsCards .col-3:has(.fa-comments)').show();
+                    $('#additionalStats .col-3:has(.fa-calendar-day), #additionalStats .col-3:has(.fa-robot)').show();
+                    break;
+            }
+        }
+
+        // Apply filter on page load if filter type is not 'all'
+        $(document).ready(function() {
+            if ($('#filterType').val() !== 'all') {
+                filterCards();
+            }
+        });
+    </script>
+    
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container canvas {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        /* Filter Controls Styling */
+        #filterContainer {
+            transition: all 0.3s ease;
+        }
+
+        .btn-group .btn {
+            transition: all 0.2s ease;
+        }
+
+        .btn-group .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Quick filter buttons */
+        .btn-outline-primary.btn-sm {
+            margin-right: 5px;
+            border-radius: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-primary.btn-sm:hover {
+            transform: scale(1.05);
+        }
+
+        /* Cards animation */
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Filter form styling */
+        .form-control, .form-select {
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        /* Loading animation */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%) !important;
+        }
+        
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%) !important;
+        }
+    </style>
+        
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+        }
+        
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .management-card {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .management-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        .management-card .card-body {
+            padding: 2rem 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .management-card i {
+            transition: transform 0.3s ease;
+        }
+
+        .management-card:hover i {
+            transform: scale(1.1);
+        }
+
+        .management-card h6 {
+            margin: 1rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .management-card p {
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .management-card .btn {
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .management-card .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+}

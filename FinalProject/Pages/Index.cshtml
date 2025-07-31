@@ -1,0 +1,920 @@
+@page
+@model FinalProject.Pages.IndexModel
+@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "_Layout";
+}
+
+<!-- Modern Hero Section -->
+<section class="modern-hero-section">
+    <div class="hero-background"></div>
+    <div class="geometric-elements"></div>
+    
+    <div class="container">
+        <div class="row align-items-center min-vh-100 py-5">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="text-white">Cosmic</span>
+                        <span class="text-accent">Novels</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Khám phá thế giới truyện tranh và tiểu thuyết không giới hạn. 
+                        Đọc, dịch thuật và chia sẻ những câu chuyện tuyệt vời từ khắp nơi trên thế giới.
+                    </p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-book-open"></i>
+                            <span>Hàng nghìn tiểu thuyết chất lượng cao</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-language"></i>
+                            <span>Dịch thuật chuyên nghiệp</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-comments"></i>
+                            <span>Cộng đồng độc giả năng động</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-star"></i>
+                            <span>Đánh giá và bình luận</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-actions">
+                        @if (Model.IsLoggedIn)
+                        {
+                            <a asp-page="/User/Dashboard" class="btn btn-primary btn-lg">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Vào Dashboard
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-page="/Register" class="btn btn-primary btn-lg">
+                                <i class="fas fa-rocket me-2"></i>
+                                Bắt đầu đọc ngay
+                            </a>
+                            <a asp-page="/Login" class="btn btn-outline btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Đăng nhập
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="hero-visual">
+                    <div class="book-stack">
+                        <div class="book book-1">
+                            <div class="book-spine">
+                                <div class="book-title">Huyền Huyễn</div>
+                                <div class="book-author">Fantasy</div>
+                            </div>
+                        </div>
+                        <div class="book book-2">
+                            <div class="book-spine">
+                                <div class="book-title">Kiếm Hiệp</div>
+                                <div class="book-author">Martial Arts</div>
+                            </div>
+                        </div>
+                        <div class="book book-3">
+                            <div class="book-spine">
+                                <div class="book-title">Khoa Huyễn</div>
+                                <div class="book-author">Sci-Fi</div>
+                            </div>
+                        </div>
+                        <div class="book book-4">
+                            <div class="book-spine">
+                                <div class="book-title">Lãng Mạn</div>
+                                <div class="book-author">Romance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Top Novels Section -->
+<section class="novels-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">
+                    Tiểu thuyết nổi bật
+                </h2>
+                <p class="section-subtitle">
+                    Khám phá những tác phẩm được yêu thích nhất
+                </p>
+            </div>
+        </div>
+        
+        @if (Model.TopNovels.Any())
+        {
+            <div class="row g-4">
+                @foreach (var novel in Model.TopNovels)
+                {
+                    <div class="col-4">
+                        <div class="novel-card">
+                            <div class="novel-image-container">
+                                @if (!string.IsNullOrEmpty(novel.ImageUrl))
+                                {
+                                    <img src="@novel.ImageUrl" alt="@novel.Title" class="novel-image" />
+                                }
+                                else
+                                {
+                                    <div class="novel-placeholder">
+                                        <i class="fas fa-book fa-3x"></i>
+                                    </div>
+                                }
+                                <div class="novel-overlay">
+                                    <div class="novel-stats">
+                                        <span class="stat-item">
+                                            <i class="fas fa-eye"></i>
+                                            @novel.ViewCount.ToString("N0")
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fas fa-star"></i>
+                                            @novel.Rating.ToString("0.0") (@novel.RatingCount)
+                                        </span>
+                                        <span class="stat-item">
+                                            <i class="fas fa-book-open"></i>
+                                            @novel.ChapterCount chương
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="novel-content">
+                                <h5 class="novel-title">@novel.Title</h5>
+                                <p class="novel-author">
+                                    <i class="fas fa-user me-1"></i>@novel.AuthorName
+                                </p>
+                                <p class="novel-description">@novel.ShortDescription</p>
+                                
+                                @if (novel.CategoryNames.Any())
+                                {
+                                    <div class="novel-categories">
+                                        @foreach (var category in novel.CategoryNames.Take(3))
+                                        {
+                                            <span class="category-tag">@category</span>
+                                        }
+                                        @if (novel.CategoryNames.Count > 3)
+                                        {
+                                            <span class="category-tag">+@(novel.CategoryNames.Count - 3)</span>
+                                        }
+                                    </div>
+                                }
+                                
+                                <div class="novel-actions">
+                                    <a href="/Novel/@novel.Id" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-book-reader me-2"></i>Đọc ngay
+                                    </a>
+                                    <button class="btn btn-outline btn-sm" type="button">
+                                        <i class="fas fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <a href="/Novels" class="btn btn-outline btn-lg">
+                        <i class="fas fa-books me-2"></i>Xem tất cả tiểu thuyết
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="no-novels-message">
+                        <i class="fas fa-book-open text-muted" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                        <h4 class="text-muted">Chưa có tiểu thuyết nào</h4>
+                        <p class="text-muted">Hệ thống đang được cập nhật với những tác phẩm mới.</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">
+                    Tính năng nổi bật
+                </h2>
+                <p class="section-subtitle">
+                    Trải nghiệm đọc truyện hoàn toàn mới với công nghệ hiện đại
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <h4 class="feature-title">Đọc trực tuyến</h4>
+                    <p class="feature-description">
+                        Đọc truyện mọi lúc, mọi nơi với giao diện thân thiện và tốc độ tải nhanh.
+                        Hỗ trợ nhiều định dạng và tùy chỉnh trải nghiệm đọc.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <h4 class="feature-title">Dịch thuật chuyên nghiệp</h4>
+                    <p class="feature-description">
+                        Đội ngũ dịch giả chuyên nghiệp mang đến những bản dịch chất lượng cao,
+                        giữ nguyên tinh thần và cảm xúc của tác phẩm gốc.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="feature-title">Cộng đồng sôi động</h4>
+                    <p class="feature-description">
+                        Tham gia thảo luận, chia sẻ cảm nhận và kết nối với hàng nghìn độc giả
+                        khác có cùng đam mê với truyện tranh và tiểu thuyết.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <h4 class="feature-title">Quản lý thư viện cá nhân</h4>
+                    <p class="feature-description">
+                        Lưu trữ và sắp xếp những tác phẩm yêu thích, theo dõi tiến độ đọc
+                        và nhận thông báo khi có chương mới.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4 class="feature-title">Tìm kiếm thông minh</h4>
+                    <p class="feature-description">
+                        Hệ thống tìm kiếm mạnh mẽ giúp bạn khám phá những tác phẩm mới
+                        dựa trên thể loại, tác giả, và sở thích cá nhân.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4 class="feature-title">Responsive Design</h4>
+                    <p class="feature-description">
+                        Giao diện tối ưu cho mọi thiết bị từ máy tính, tablet đến điện thoại,
+                        mang đến trải nghiệm đọc tuyệt vời ở mọi nơi.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">
+                    Cosmic Novels trong con số
+                </h2>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-3">
+                <div class="stat-item">
+                    <div class="stat-number">5,000+</div>
+                    <div class="stat-label">Tiểu thuyết</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-3">
+                <div class="stat-item">
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Độc giả</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-3">
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">Dịch giả</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-3">
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Lượt đọc</div>
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="cta-content">
+                    <h2 class="cta-title">
+                        Sẵn sàng bắt đầu cuộc phiêu lưu?
+                    </h2>
+                    <p class="cta-description">
+                        Tham gia cộng đồng Cosmic Novels ngay hôm nay và khám phá hàng nghìn câu chuyện tuyệt vời 
+                        đang chờ đón bạn. Hoàn toàn miễn phí!
+                    </p>
+                    
+                    @if (!Model.IsLoggedIn)
+                    {
+                        <div class="cta-actions">
+                            <a asp-page="/Register" class="btn btn-primary btn-xl">
+                                <i class="fas fa-rocket me-2"></i>
+                                Đăng ký miễn phí
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .modern-hero-section {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .geometric-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 49%, rgba(255, 255, 255, 0.02) 50%, transparent 51%),
+                linear-gradient(-45deg, transparent 49%, rgba(255, 255, 255, 0.02) 50%, transparent 51%);
+            background-size: 60px 60px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features-list {
+            margin-bottom: 2.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .feature-item i {
+            color: var(--accent-color);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .btn-lg {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-xl {
+            padding: 1.5rem 3rem;
+            font-size: 1.2rem;
+        }
+
+        .btn-sm {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        /* Book Stack Visual */
+        .hero-visual {
+            position: relative;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-stack {
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .book {
+            position: absolute;
+            width: 80px;
+            height: 300px;
+            transform-style: preserve-3d;
+            animation: floatBook 6s ease-in-out infinite;
+        }
+
+        .book-1 {
+            background: var(--bg-secondary);
+            transform: rotateY(-15deg) translateX(-60px);
+            animation-delay: 0s;
+        }
+
+        .book-2 {
+            background: var(--bg-tertiary);
+            transform: rotateY(-5deg) translateX(-20px);
+            animation-delay: 1.5s;
+        }
+
+        .book-3 {
+            background: var(--text-secondary);
+            transform: rotateY(5deg) translateX(20px);
+            animation-delay: 3s;
+        }
+
+        .book-4 {
+            background: var(--text-primary);
+            transform: rotateY(15deg) translateX(60px);
+            animation-delay: 4.5s;
+        }
+
+        .book-spine {
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .book-title, .book-author {
+            color: var(--text-primary);
+            text-align: center;
+            transform: rotate(-90deg);
+            white-space: nowrap;
+        }
+
+        .book-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-author {
+            font-size: 0.7rem;
+        }
+
+        @@keyframes floatBook {
+            0%, 100% { transform: translateY(0px) rotateY(var(--rotation, 0deg)) translateX(var(--translateX, 0px)); }
+            50% { transform: translateY(-20px) rotateY(var(--rotation, 0deg)) translateX(var(--translateX, 0px)); }
+        }
+
+        /* Sections */
+        .novels-section, .features-section, .stats-section, .cta-section {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+
+        .features-section {
+            background: var(--bg-primary);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        /* Cards */
+        .novel-card, .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .novel-card:hover, .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--text-primary);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .novel-image-container {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .novel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .novel-placeholder {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .novel-card:hover .novel-image {
+            transform: scale(1.05);
+        }
+
+        .novel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .novel-card:hover .novel-overlay {
+            opacity: 1;
+        }
+
+        .novel-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+        }
+
+        .novel-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .novel-title {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .novel-author {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .novel-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .novel-categories {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-tag {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .novel-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .feature-title {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Statistics */
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: var(--text-primary);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            color: var(--text-muted);
+            font-size: 2rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--bg-primary);
+        }
+
+        .cta-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .cta-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-actions {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate statistics on scroll
+            animateStatsOnScroll();
+        });
+        
+        function animateStatsOnScroll() {
+            const stats = document.querySelectorAll('.stat-number');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const finalNumber = target.textContent;
+                        const numericValue = parseInt(finalNumber.replace(/[^\d]/g, ''));
+                        const suffix = finalNumber.replace(/[\d,]/g, '');
+                        
+                        let current = 0;
+                        const increment = numericValue / 100;
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= numericValue) {
+                                current = numericValue;
+                                clearInterval(timer);
+                            }
+                            
+                            const displayValue = Math.floor(current);
+                            if (displayValue >= 1000) {
+                                target.textContent = (displayValue / 1000).toFixed(displayValue >= 10000 ? 0 : 1) + 'k' + suffix.replace(/[\dk]/g, '');
+                            } else {
+                                target.textContent = displayValue.toLocaleString() + suffix.replace(/[\d,]/g, '');
+                            }
+                        }, 20);
+                        
+                        observer.unobserve(target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            stats.forEach(stat => observer.observe(stat));
+        }
+    </script>
+}
+}

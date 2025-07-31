@@ -1,0 +1,1473 @@
+@page "/Chapter/{novelId:int}/{chapterNumber:int}"
+@model FinalProject.Pages.ChapterReadModel
+@{
+    ViewData["Title"] = $"{Model.Chapter?.Title} - {Model.Novel?.Title}";
+    Layout = "_Layout";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="chapter-read-section">
+    <div class="container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model.Chapter != null && Model.Novel != null)
+        {
+            <!-- Chapter Header -->
+            <div class="chapter-header-card mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/Novels" class="text-decoration-none">
+                                        <i class="fas fa-book-open me-1"></i>Thư viện
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/Novel/@Model.Novel.Id" class="text-decoration-none">
+                                        @Model.Novel.Title
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Chương @Model.Chapter.Number
+                                </li>
+                            </ol>
+                        </nav>
+                        
+                        <h1 class="chapter-title">
+                            <span class="badge bg-primary me-2">Chương @Model.Chapter.Number</span>
+                            @Model.Chapter.Title
+                        </h1>
+                        
+                        <div class="chapter-meta">
+                            <small class="text-muted me-3">
+                                <i class="fas fa-clock me-1"></i>@Model.Chapter.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                            <small class="text-muted me-3">
+                                <i class="fas fa-file-word me-1"></i>@Model.Chapter.WordCount.ToString("N0") từ
+                            </small>
+                            <small class="text-muted me-3">
+                                <i class="fas fa-eye me-1"></i>@Model.Chapter.ViewCount.ToString("N0") lượt xem
+                            </small>
+                            @if (Model.Chapter.Price > 0)
+                            {
+                                <small class="text-warning">
+                                    <i class="fas fa-coins me-1"></i>@Model.Chapter.Price coins
+                                </small>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 text-end">
+                        @if (Model.IsUserLoggedIn && Model.UserRole == "Admin")
+                        {
+                            <a href="/Admin/NovelChapters/@Model.Novel.Id" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-cog me-1"></i>Quản lý
+                            </a>
+                        }
+                        else if (Model.IsUserLoggedIn && Model.UserRole == "Translator")
+                        {
+                            <a href="/Staff/NovelChapters/@Model.Novel.Id" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit me-1"></i>Biên tập
+                            </a>
+                        }
+                        
+                        <button onclick="toggleFontSize()" class="btn btn-sm btn-outline-secondary me-1" title="Thay đổi kích thước chữ">
+                            <i class="fas fa-text-height"></i>
+                        </button>
+                        <button onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary me-1" title="Chế độ tối">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        
+                        @if (Model.IsUserLoggedIn)
+                        {
+                            <div class="btn-group ms-2" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-info" id="summarizeBtn" title="Tóm tắt đoạn đã chọn">
+                                    <i class="fas fa-compress-alt me-1"></i>Tóm tắt
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-success" id="translateBtn" title="Dịch đoạn đã chọn">
+                                    <i class="fas fa-language me-1"></i>Dịch
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter Navigation -->
+            <div class="chapter-navigation-card mb-4">
+                <div class="row">
+                    <div class="col-4 text-start">
+                        @if (Model.PreviousChapter != null)
+                        {
+                            <a href="/Chapter/@Model.Novel.Id/@Model.PreviousChapter.Number" 
+                               class="btn btn-outline-primary">
+                                <i class="fas fa-chevron-left me-2"></i>Chương trước
+                            </a>
+                        }
+                    </div>
+                    <div class="col-4 text-center">
+                        <a href="/Novel/@Model.Novel.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>Danh sách chương
+                        </a>
+                    </div>
+                    <div class="col-4 text-end">
+                        @if (Model.NextChapter != null)
+                        {
+                            <a href="/Chapter/@Model.Novel.Id/@Model.NextChapter.Number" 
+                               class="btn btn-outline-primary">
+                                Chương sau<i class="fas fa-chevron-right ms-2"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter Content -->
+            <div class="chapter-content-card">
+                @if (Model.CanAccessChapter)
+                {
+                    <!-- Translator Notes (if any) -->
+                    @if (!string.IsNullOrEmpty(Model.Chapter.TranslatorNotes))
+                    {
+                        <div class="translator-notes mb-4">
+                            <h6 class="text-info">
+                                <i class="fas fa-sticky-note me-2"></i>Ghi chú dịch giả:
+                            </h6>
+                            <div class="notes-content">
+                                @Html.Raw(Model.Chapter.TranslatorNotes.Replace("\n", "<br/>"))
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Main Content -->
+                    <div class="chapter-text" id="chapterContent">
+                        @Html.Raw(Model.Chapter.Content.Replace("\n", "<br/>"))
+                    </div>
+
+                    <!-- Chapter End -->
+                    <div class="chapter-end mt-5 pt-4 border-top">
+                        <div class="text-center">
+                            <h5 class="text-muted">--- Hết chương @Model.Chapter.Number ---</h5>
+                            @if (Model.Chapter.TranslatedBy != null)
+                            {
+                                <p class="text-muted mt-2">
+                                    <i class="fas fa-language me-1"></i>
+                                    Dịch bởi: <strong>@Model.Chapter.TranslatedBy.FullName</strong>
+                                </p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Premium Content Block -->
+                    <div class="premium-content-block text-center py-5">
+                        <i class="fas fa-lock fa-4x text-warning mb-4"></i>
+                        <h4 class="text-warning">Chương có phí</h4>
+                        <p class="text-muted mb-4">
+                            Chương này cần <strong>@Model.Chapter.Price xu</strong> để đọc.
+                        </p>
+                        
+                        @if (!string.IsNullOrEmpty(Model.PaymentMessage))
+                        {
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>@Model.PaymentMessage
+                            </div>
+                        }
+                        
+                        @if (Model.IsUserLoggedIn)
+                        {
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-wallet me-1"></i>
+                                    Số dư hiện tại: <strong>@Model.UserCoins xu</strong>
+                                </small>
+                            </div>
+                            
+                            @if (Model.NeedsPayment && Model.UserCoins >= Model.Chapter.Price)
+                            {
+                                <form method="post" asp-page-handler="PurchaseChapter" 
+                                      asp-route-novelId="@Model.Novel.Id" 
+                                      asp-route-chapterNumber="@Model.Chapter.Number"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-warning me-2"
+                                            onclick="return confirm('Bạn có chắc chắn muốn mua chương này với @Model.Chapter.Price xu?')">
+                                        <i class="fas fa-coins me-2"></i>Mua chương (@Model.Chapter.Price xu)
+                                    </button>
+                                </form>
+                            }
+                            else if (Model.NeedsPayment)
+                            {
+                                <button class="btn btn-warning me-2" disabled>
+                                    <i class="fas fa-coins me-2"></i>Không đủ xu (@Model.Chapter.Price xu)
+                                </button>
+                            }
+                            
+                            <a href="#" onclick="showCoinsModal()" class="btn btn-outline-primary">
+                                <i class="fas fa-plus me-2"></i>Nạp xu
+                            </a>
+                        }
+                        else
+                        {
+                            <div>
+                                <p class="text-muted">Vui lòng đăng nhập để mua chương.</p>
+                                <a href="/Login" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="chapter-navigation-card mt-4">
+                <div class="row">
+                    <div class="col-4 text-start">
+                        @if (Model.PreviousChapter != null)
+                        {
+                            <a href="/Chapter/@Model.Novel.Id/@Model.PreviousChapter.Number" 
+                               class="btn btn-outline-primary">
+                                <i class="fas fa-chevron-left me-2"></i>Chương trước
+                            </a>
+                        }
+                    </div>
+                    <div class="col-4 text-center">
+                        <a href="/Novel/@Model.Novel.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>Danh sách chương
+                        </a>
+                    </div>
+                    <div class="col-4 text-end">
+                        @if (Model.NextChapter != null)
+                        {
+                            <a href="/Chapter/@Model.Novel.Id/@Model.NextChapter.Number" 
+                               class="btn btn-outline-primary">
+                                Chương sau<i class="fas fa-chevron-right ms-2"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Không tìm thấy chương</h4>
+                <p class="text-muted">Chương bạn đang tìm không tồn tại hoặc đã bị xóa.</p>
+                <a href="/Novels" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại thư viện
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- AI Confirmation Modal -->
+<div class="modal fade" id="aiConfirmModal" tabindex="-1" aria-labelledby="aiConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aiConfirmModalLabel">
+                    <i class="fas fa-coins me-2 text-warning"></i>Xác nhận sử dụng AI
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+                    <h6 id="aiConfirmTitle">Bạn có muốn sử dụng AI để xử lý văn bản?</h6>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle me-3 text-warning"></i>
+                        <div>
+                            <strong>Chi phí:</strong> <span id="aiCostDisplay">50</span> coins sẽ được trừ từ tài khoản của bạn.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded mb-3">
+                    <h6><i class="fas fa-quote-left me-2"></i>Văn bản sẽ được xử lý:</h6>
+                    <div id="confirmSelectedText" class="text-muted"></div>
+                </div>
+
+                <div class="text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> Bạn có đủ coins để thực hiện thao tác này
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Hủy bỏ
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmAIAction">
+                    <i class="fas fa-check me-2"></i>Xác nhận & Tiếp tục
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Results Modal -->
+<div class="modal fade" id="aiResultModal" tabindex="-1" aria-labelledby="aiResultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aiResultModalLabel">
+                    <i class="fas fa-robot me-2"></i>Kết quả AI
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="selectedTextContainer" class="mb-3">
+                    <h6><i class="fas fa-quote-left me-2"></i>Văn bản đã chọn:</h6>
+                    <div class="p-3 bg-light rounded" id="selectedTextDisplay"></div>
+                </div>
+                <div id="aiResultContainer">
+                    <h6 id="resultTitle"><i class="fas fa-magic me-2"></i>Kết quả:</h6>
+                    <div class="p-3 border rounded" id="aiResultDisplay">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang xử lý...</span>
+                            </div>
+                            <p class="mt-2 text-muted">AI đang xử lý văn bản...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Coin Purchase Modal -->
+<div class="modal fade" id="coinPurchaseModal" tabindex="-1" aria-labelledby="coinPurchaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-dark" id="coinPurchaseModalLabel">
+                    <i class="fas fa-coins me-2"></i>Nạp Coins
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-wallet fa-3x text-warning mb-3"></i>
+                    <h6>Chọn gói nạp coins phù hợp</h6>
+                    <p class="text-muted">Số dư hiện tại: <strong>@Model.UserCoins coins</strong></p>
+                </div>
+
+                <div class="row">
+                    <!-- Gói cơ bản -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-primary coin-package" data-coins="100" data-price="10000">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-coins fa-2x text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Gói Cơ Bản</h5>
+                                <h3 class="text-primary">100 Coins</h3>
+                                <p class="text-muted">10.000 VNĐ</p>
+                                <ul class="list-unstyled text-start">
+                                    <li><i class="fas fa-check text-success me-2"></i>2 lần tóm tắt AI</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>2 lần dịch AI</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Có thể mua chapters</li>
+                                </ul>
+                                <button class="btn btn-primary w-100 select-package">Chọn gói này</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gói phổ biến -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-success coin-package popular" data-coins="300" data-price="25000">
+                            <div class="card-header bg-success text-white text-center">
+                                <i class="fas fa-star me-1"></i>Phổ biến
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-coins fa-2x text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Gói Tiết Kiệm</h5>
+                                <h3 class="text-success">300 Coins</h3>
+                                <p class="text-muted">25.000 VNĐ</p>
+                                <p class="text-success small">Tiết kiệm 16%</p>
+                                <ul class="list-unstyled text-start">
+                                    <li><i class="fas fa-check text-success me-2"></i>6 lần tóm tắt AI</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>6 lần dịch AI</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Có thể mua nhiều chapters</li>
+                                    <li><i class="fas fa-star text-warning me-2"></i>Bonus 50 coins</li>
+                                </ul>
+                                <button class="btn btn-success w-100 select-package">Chọn gói này</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gói cao cấp -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-warning coin-package" data-coins="600" data-price="45000">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-crown fa-2x text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Gói Cao Cấp</h5>
+                                <h3 class="text-warning">600 Coins</h3>
+                                <p class="text-muted">45.000 VNĐ</p>
+                                <p class="text-warning small">Tiết kiệm 25%</p>
+                                <ul class="list-unstyled text-start">
+                                    <li><i class="fas fa-check text-success me-2"></i>12 lần tóm tắt AI</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>12 lần dịch AI</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Đọc nhiều chapters có phí</li>
+                                    <li><i class="fas fa-star text-warning me-2"></i>Bonus 150 coins</li>
+                                    <li><i class="fas fa-crown text-warning me-2"></i>Ưu tiên hỗ trợ</li>
+                                </ul>
+                                <button class="btn btn-warning w-100 select-package">Chọn gói này</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected package info -->
+                <div id="selectedPackageInfo" class="alert alert-info" style="display: none;">
+                    <h6><i class="fas fa-info-circle me-2"></i>Thông tin gói đã chọn:</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Số coins:</strong> <span id="selectedCoins">0</span> coins
+                        </div>
+                        <div class="col-6">
+                            <strong>Giá:</strong> <span id="selectedPrice">0</span> VNĐ
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment methods -->
+                <div id="paymentSection" style="display: none;">
+                    <h6 class="mt-4 mb-3"><i class="fas fa-credit-card me-2"></i>Chọn phương thức thanh toán:</h6>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 mb-2">
+                            <label class="payment-method">
+                                <input type="radio" name="paymentMethod" value="banking" checked>
+                                <div class="payment-card">
+                                    <i class="fas fa-university fa-2x text-info"></i>
+                                    <span>Chuyển khoản</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="payment-method">
+                                <input type="radio" name="paymentMethod" value="vnpay">
+                                <div class="payment-card">
+                                    <i class="fas fa-credit-card fa-2x text-success"></i>
+                                    <span>VNPay</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Hủy
+                </button>
+                <button type="button" class="btn btn-warning" id="proceedPayment" style="display: none;">
+                    <i class="fas fa-credit-card me-2"></i>Thanh toán
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentFontSize = 16;
+        let isDarkMode = false;
+
+        function toggleFontSize() {
+            currentFontSize = currentFontSize === 16 ? 18 : currentFontSize === 18 ? 20 : 16;
+            document.getElementById('chapterContent').style.fontSize = currentFontSize + 'px';
+            
+            // Save preference to localStorage
+            localStorage.setItem('chapterFontSize', currentFontSize);
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            const body = document.body;
+            const icon = document.querySelector('[onclick="toggleDarkMode()"] i');
+            
+            if (isDarkMode) {
+                body.classList.add('dark-mode');
+                icon.className = 'fas fa-sun';
+            } else {
+                body.classList.remove('dark-mode');
+                icon.className = 'fas fa-moon';
+            }
+            
+            // Save preference to localStorage
+            localStorage.setItem('chapterDarkMode', isDarkMode);
+        }
+
+        function showCoinsModal() {
+            // Show coin purchase modal
+            const coinModal = new bootstrap.Modal(document.getElementById('coinPurchaseModal'));
+            coinModal.show();
+        }
+
+        // AI Features
+        let selectedText = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved preferences
+            const savedFontSize = localStorage.getItem('chapterFontSize');
+            if (savedFontSize) {
+                currentFontSize = parseInt(savedFontSize);
+                document.getElementById('chapterContent').style.fontSize = currentFontSize + 'px';
+            }
+
+            const savedDarkMode = localStorage.getItem('chapterDarkMode');
+            if (savedDarkMode === 'true') {
+                toggleDarkMode();
+            }
+
+            // Initialize AI buttons
+            const summarizeBtn = document.getElementById('summarizeBtn');
+            const translateBtn = document.getElementById('translateBtn');
+            const copyResultBtn = document.getElementById('copyResultBtn');
+
+            if (summarizeBtn) {
+                summarizeBtn.addEventListener('click', handleSummarize);
+            }
+            if (translateBtn) {
+                translateBtn.addEventListener('click', handleTranslate);
+            }
+            if (copyResultBtn) {
+                copyResultBtn.addEventListener('click', copyResult);
+            }
+
+            // Handle text selection
+            document.addEventListener('mouseup', handleTextSelection);
+            document.addEventListener('keyup', handleTextSelection);
+
+            // Initialize coin purchase functionality
+            initializeCoinPurchase();
+        });
+
+        function initializeCoinPurchase() {
+            // Handle package selection
+            document.querySelectorAll('.select-package').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.coin-package');
+                    const coins = card.dataset.coins;
+                    const price = card.dataset.price;
+                    
+                    // Remove previous selection
+                    document.querySelectorAll('.coin-package').forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selection to current card
+                    card.classList.add('selected');
+                    
+                    // Update info
+                    document.getElementById('selectedCoins').textContent = parseInt(coins).toLocaleString();
+                    document.getElementById('selectedPrice').textContent = parseInt(price).toLocaleString();
+                    
+                    // Show info and payment section
+                    document.getElementById('selectedPackageInfo').style.display = 'block';
+                    document.getElementById('paymentSection').style.display = 'block';
+                    document.getElementById('proceedPayment').style.display = 'inline-block';
+                });
+            });
+
+            // Handle payment
+            document.getElementById('proceedPayment').addEventListener('click', function() {
+                const selectedPackage = document.querySelector('.coin-package.selected');
+                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+                
+                if (!selectedPackage) {
+                    alert('Vui lòng chọn gói nạp coins!');
+                    return;
+                }
+                
+                const coins = selectedPackage.dataset.coins;
+                const price = selectedPackage.dataset.price;
+                
+                // Process payment (mock)
+                processPayment(coins, price, paymentMethod);
+            });
+        }
+
+        function processPayment(coins, price, paymentMethod) {
+            // Debug logging
+            console.log('Processing payment:', { coins, price, paymentMethod });
+            
+            // Show loading state
+            const btn = document.getElementById('proceedPayment');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+            btn.disabled = true;
+            
+            // Get antiforgery token
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            console.log('Antiforgery token:', token);
+            
+            // Call the backend API to process payment using URL encoded form
+            const params = new URLSearchParams();
+            params.append('coins', coins);
+            params.append('price', price);  
+            params.append('paymentMethod', paymentMethod);
+            
+            console.log('Sending data:', params.toString());
+            
+            fetch(window.location.pathname + '?handler=PurchaseCoins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params.toString()
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Check if we need to redirect to VNPay
+                    if (result.redirectUrl) {
+                        // Show message and redirect
+                        alert(result.message);
+                        window.location.href = result.redirectUrl;
+                        return;
+                    }
+                    
+                    // Show success message for other payment methods
+                    alert(result.message);
+                    
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('coinPurchaseModal'));
+                    modal.hide();
+                    
+                    // Update UI with new balance (if available)
+                    if (result.newBalance) {
+                        // Update all coin displays on the page
+                        document.querySelectorAll('[data-coin-display]').forEach(el => {
+                            el.textContent = result.newBalance.toLocaleString() + ' xu';
+                        });
+                    }
+                    
+                    // Refresh page to update all coin-related UI
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    alert('Lỗi: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                alert('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.');
+            })
+            .finally(() => {
+                // Reset button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        function handleTextSelection() {
+            const selection = window.getSelection();
+            selectedText = selection.toString().trim();
+            
+            const summarizeBtn = document.getElementById('summarizeBtn');
+            const translateBtn = document.getElementById('translateBtn');
+            
+            if (summarizeBtn && translateBtn) {
+                if (selectedText.length > 0) {
+                    summarizeBtn.disabled = false;
+                    translateBtn.disabled = false;
+                    summarizeBtn.title = `Tóm tắt: "${selectedText.substring(0, 50)}${selectedText.length > 50 ? '...' : ''}"`;
+                    translateBtn.title = `Dịch: "${selectedText.substring(0, 50)}${selectedText.length > 50 ? '...' : ''}"`;
+                } else {
+                    summarizeBtn.disabled = true;
+                    translateBtn.disabled = true;
+                    summarizeBtn.title = 'Vui lòng chọn văn bản để tóm tắt';
+                    translateBtn.title = 'Vui lòng chọn văn bản để dịch';
+                }
+            }
+        }
+
+        async function handleSummarize() {
+            if (!selectedText) {
+                alert('Vui lòng chọn đoạn văn bản cần tóm tắt.');
+                return;
+            }
+
+            showAIConfirmation('summarize', 'Tóm tắt văn bản', @Model.SummarizeCost);
+        }
+
+        async function handleTranslate() {
+            if (!selectedText) {
+                alert('Vui lòng chọn đoạn văn bản cần dịch.');
+                return;
+            }
+
+            showAIConfirmation('translate', 'Dịch văn bản', @Model.TranslateCost);
+        }
+
+        function showAIConfirmation(action, title, cost) {
+            // Update modal content
+            document.getElementById('aiConfirmModalLabel').innerHTML = 
+                `<i class="fas fa-coins me-2 text-warning"></i>Xác nhận ${title.toLowerCase()}`;
+            document.getElementById('aiConfirmTitle').textContent = 
+                `Bạn có muốn sử dụng AI để ${title.toLowerCase()}?`;
+            document.getElementById('aiCostDisplay').textContent = cost;
+            document.getElementById('confirmSelectedText').textContent = 
+                selectedText.length > 100 ? selectedText.substring(0, 100) + '...' : selectedText;
+
+            // Show confirmation modal
+            const confirmModal = new bootstrap.Modal(document.getElementById('aiConfirmModal'));
+            confirmModal.show();
+
+            // Handle confirmation
+            const confirmBtn = document.getElementById('confirmAIAction');
+            confirmBtn.onclick = function() {
+                confirmModal.hide();
+                processTextWithAI(action, title);
+            };
+        }
+
+        async function processTextWithAI(action, title) {
+            // Show modal with loading state
+            document.getElementById('aiResultModalLabel').innerHTML = `<i class="fas fa-robot me-2"></i>${title}`;
+            document.getElementById('selectedTextDisplay').textContent = selectedText;
+            document.getElementById('aiResultDisplay').innerHTML = `
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang xử lý...</span>
+                    </div>
+                    <p class="mt-2 text-muted">AI đang xử lý văn bản...</p>
+                </div>
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById('aiResultModal'));
+            modal.show();
+
+            try {
+                const endpoint = action === 'summarize' ? 
+                    window.location.pathname + '?handler=SummarizeText' : 
+                    window.location.pathname + '?handler=TranslateText';
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({
+                        selectedText: selectedText
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const resultTitle = action === 'summarize' ? 'Tóm tắt:' : 
+                                      (result.targetLanguage === 'vi' ? 'Bản dịch tiếng Việt:' : 'Bản dịch tiếng Anh:');
+                    
+                    document.getElementById('resultTitle').innerHTML = `<i class="fas fa-magic me-2"></i>${resultTitle}`;
+                    document.getElementById('aiResultDisplay').innerHTML = `
+                        <div class="ai-result-text">${result.result.replace(/\n/g, '<br>')}</div>
+                    `;
+                } else {
+                    document.getElementById('aiResultDisplay').innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>${result.message || 'Đã xảy ra lỗi khi xử lý văn bản.'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error processing text:', error);
+                document.getElementById('aiResultDisplay').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Không thể kết nối đến server. Vui lòng thử lại sau.
+                    </div>
+                `;
+            }
+        }
+
+        function copyResult() {
+            const resultText = document.querySelector('#aiResultDisplay .ai-result-text');
+            if (resultText) {
+                const textToCopy = resultText.textContent || resultText.innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // Show success feedback
+                    const copyBtn = document.getElementById('copyResultBtn');
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check me-2"></i>Đã sao chép!';
+                    copyBtn.classList.add('btn-success');
+                    copyBtn.classList.remove('btn-primary');
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.classList.remove('btn-success');
+                        copyBtn.classList.add('btn-primary');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Không thể sao chép văn bản. Vui lòng chọn và sao chép thủ công.');
+                });
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) return; // Ignore if Ctrl/Cmd is pressed
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    const prevBtn = document.querySelector('a[href*="Chapter"][href*="@(Model.PreviousChapter?.Number)"]');
+                    if (prevBtn) {
+                        e.preventDefault();
+                        prevBtn.click();
+                    }
+                    break;
+                case 'ArrowRight':
+                    const nextBtn = document.querySelector('a[href*="Chapter"][href*="@(Model.NextChapter?.Number)"]');
+                    if (nextBtn) {
+                        e.preventDefault();
+                        nextBtn.click();
+                    }
+                    break;
+                case 'Escape':
+                    window.location.href = '/Novel/@Model.Novel?.Id';
+                    break;
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modern Black & White Chapter Read Theme */
+        .chapter-read-section {
+            padding: 2rem 0;
+            min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .chapter-header-card, 
+        .chapter-navigation-card, 
+        .chapter-content-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-header-card:hover,
+        .chapter-content-card:hover {
+            border-color: var(--text-primary);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .chapter-navigation-card {
+            padding: 1.5rem 2rem;
+        }
+
+        .chapter-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .chapter-title .badge {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-weight: 600;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+        }
+
+        .chapter-meta {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .chapter-meta small {
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb-item a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-primary);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: var(--text-muted);
+        }
+
+        .translator-notes {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--text-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .translator-notes h6 {
+            color: var(--text-primary);
+        }
+
+        .notes-content {
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .chapter-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            text-align: justify;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 2rem 0;
+        }
+
+        .chapter-text p {
+            margin-bottom: 1.5rem;
+            text-indent: 2rem;
+        }
+
+        .chapter-end {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+
+        .chapter-end h5 {
+            color: var(--text-muted);
+        }
+
+        .chapter-end strong {
+            color: var(--text-primary);
+        }
+
+        .premium-content-block {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 2px dashed var(--border-color);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .premium-content-block i {
+            color: #ffc107;
+        }
+
+        .premium-content-block h4 {
+            color: #ffc107;
+        }
+
+        .premium-content-block p {
+            color: var(--text-secondary);
+        }
+
+        /* Button styling to match theme */
+        .btn-primary {
+            background: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--text-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+            color: var(--bg-primary);
+        }
+
+        .btn-outline-primary {
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+        }
+
+        .btn-outline-secondary {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.1);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,193,7,0.3);
+            color: var(--bg-primary);
+        }
+
+        .btn-warning:disabled {
+            background: rgba(255, 193, 7, 0.3);
+            color: rgba(0, 0, 0, 0.5);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Alert styling */
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #ff6b6b;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #4cd964;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-info {
+            background: rgba(13, 202, 240, 0.1);
+            border: 1px solid rgba(13, 202, 240, 0.3);
+            color: #0dcaf0;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .text-warning {
+            color: #ffc107 !important;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .text-info {
+            color: var(--text-primary) !important;
+        }
+
+        /* Error page styling */
+        .text-center.py-5 {
+            color: var(--text-muted);
+        }
+
+        .text-center.py-5 h4 {
+            color: var(--text-primary);
+        }
+
+        .text-center.py-5 i {
+            color: var(--text-muted) !important;
+        }
+
+        /* Dark mode enhancements (for the toggle feature) */
+        body.dark-mode {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #555555;
+        }
+
+        body.dark-mode .chapter-text {
+            color: var(--text-primary);
+        }
+
+        /* AI Tools Styles */
+        .ai-tools {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-btn:hover {
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .ai-btn:active {
+            transform: translateY(0);
+        }
+
+        .ai-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .ai-btn.translate {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+        }
+
+        .ai-btn.translate:hover {
+            background: linear-gradient(45deg, #1976D2, #2196F3);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        /* Modal Styles */
+        .ai-modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .ai-modal-content {
+            background-color: var(--bg-secondary);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @@keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .ai-modal-header {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+        }
+
+        .ai-modal-header h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .ai-modal-close {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .ai-modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .ai-result {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .ai-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .ai-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .selected-text {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: var(--text-secondary);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        /* Dark mode adjustments for modal */
+        body.dark-mode .ai-modal-content {
+            background-color: var(--bg-secondary);
+        }
+
+        body.dark-mode .ai-result {
+            background: var(--bg-primary);
+            border-color: var(--border-color);
+        }
+
+        body.dark-mode .selected-text {
+            background: var(--bg-primary);
+            border-color: var(--border-color);
+        }
+
+        /* Coin Purchase Modal Styles */
+        .coin-package {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .coin-package:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .coin-package.selected {
+            border-color: #ffc107 !important;
+            border-width: 3px !important;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255,193,7,0.3);
+        }
+
+        .coin-package.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #ffc107;
+            color: #000;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .coin-package.popular {
+            position: relative;
+            border-color: #28a745 !important;
+        }
+
+        .payment-method {
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+
+        .payment-card {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .payment-method input[type="radio"]:checked + .payment-card {
+            border-color: #ffc107;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(255,193,7,0.2);
+        }
+
+        .payment-card:hover {
+            border-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        .payment-card i {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .payment-card span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .fab.fa-cc-momo {
+            color: #d82d8b !important;
+        }
+
+        .fab.fa-cc-zalopay {
+            color: #0068ff !important;
+        }
+
+        /* Print styles */
+        @@media print {
+            .chapter-header-card,
+            .chapter-navigation-card,
+            .ai-modal {
+                display: none !important;
+            }
+
+            .chapter-content-card {
+                box-shadow: none;
+                border: none;
+                background: white !important;
+            }
+
+            .chapter-text {
+                font-size: 12pt;
+                line-height: 1.5;
+                color: black !important;
+            }
+        }
+    </style>
+}

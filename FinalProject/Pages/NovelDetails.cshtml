@@ -1,0 +1,579 @@
+@page "/Novel/{id:int}"
+@model FinalProject.Pages.NovelDetailsModel
+@{
+    ViewData["Title"] = Model.Novel?.Title ?? "Chi tiết tiểu thuyết";
+    Layout = "_Layout";
+}
+
+<!-- Novel Details Section -->
+<div class="novel-details-section">
+    <div class="container-fluid">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model.Novel != null)
+        {
+            <div class="row">
+                <!-- Novel Information -->
+                <div class="col-4 mb-4">
+                    <div class="novel-info-card">
+                        <!-- Novel Cover -->
+                        <div class="novel-cover-container">
+                            @if (!string.IsNullOrEmpty(Model.Novel.ImageUrl))
+                            {
+                                <img src="@Model.Novel.ImageUrl" alt="@Model.Novel.Title" class="novel-cover">
+                            }
+                            else
+                            {
+                                <div class="novel-cover-placeholder">
+                                    <i class="fas fa-book fa-4x"></i>
+                                </div>
+                            }
+                            
+                            <!-- Status Badge -->
+                            <div class="novel-status-badge">
+                                @switch (Model.Novel.Status)
+                                {
+                                    case DAL.Entities.NovelStatus.Ongoing:
+                                        <span class="badge bg-success fs-6">Đang tiến hành</span>
+                                        break;
+                                    case DAL.Entities.NovelStatus.Completed:
+                                        <span class="badge bg-primary fs-6">Hoàn thành</span>
+                                        break;
+                                    case DAL.Entities.NovelStatus.Hiatus:
+                                        <span class="badge bg-warning fs-6">Tạm dừng</span>
+                                        break;
+                                    case DAL.Entities.NovelStatus.Dropped:
+                                        <span class="badge bg-danger fs-6">Bỏ dở</span>
+                                        break;
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Novel Basic Info -->
+                        <div class="novel-basic-info">
+                            <h1 class="novel-title">@Model.Novel.Title</h1>
+                            
+                            <div class="novel-meta">
+                                <div class="meta-item">
+                                    <strong><i class="fas fa-user me-2"></i>Tác giả:</strong>
+                                    <span>@Model.Novel.AuthorName</span>
+                                </div>
+                                
+                                @if (!string.IsNullOrEmpty(Model.Novel.TranslatorName))
+                                {
+                                    <div class="meta-item">
+                                        <strong><i class="fas fa-language me-2"></i>Dịch giả:</strong>
+                                        <span>@Model.Novel.TranslatorName</span>
+                                    </div>
+                                }
+                                
+                                <div class="meta-item">
+                                    <strong><i class="fas fa-calendar me-2"></i>Xuất bản:</strong>
+                                    <span>@Model.Novel.PublishedDate.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                
+                                <div class="meta-item">
+                                    <strong><i class="fas fa-eye me-2"></i>Lượt xem:</strong>
+                                    <span>@Model.Novel.ViewCount.ToString("N0")</span>
+                                </div>
+                                
+                                @if (Model.Novel.Rating > 0)
+                                {
+                                    <div class="meta-item">
+                                        <strong><i class="fas fa-star me-2 text-warning"></i>Đánh giá:</strong>
+                                        <span>@Model.Novel.Rating.ToString("0.0")/5.0 (@Model.Novel.RatingCount votes)</span>
+                                    </div>
+                                }
+                                
+                                <div class="meta-item">
+                                    <strong><i class="fas fa-book-open me-2"></i>Số chương:</strong>
+                                    <span>@Model.Chapters.Count chương</span>
+                                </div>
+                            </div>
+
+                            <!-- Categories -->
+                            @if (Model.Novel.Categories != null && Model.Novel.Categories.Any())
+                            {
+                                <div class="novel-categories">
+                                    <strong><i class="fas fa-tags me-2"></i>Thể loại:</strong>
+                                    <div class="categories-list">
+                                        @foreach (var category in Model.Novel.Categories)
+                                        {
+                                            <span class="badge bg-secondary me-1 mb-1">@category.Name</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-8">
+                    <!-- Description -->
+                    <div class="novel-description-card mb-4">
+                        <h3><i class="fas fa-file-text me-2"></i>Mô tả</h3>
+                        <div class="description-content">
+                            @if (!string.IsNullOrEmpty(Model.Novel.Description))
+                            {
+                                <p>@Html.Raw(Model.Novel.Description.Replace("\n", "<br/>"))</p>
+                            }
+                            else
+                            {
+                                <p class="text-muted"><em>Chưa có mô tả</em></p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Chapters List -->
+                    <div class="chapters-list-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3><i class="fas fa-list me-2"></i>Danh sách chương</h3>
+                            @if (Model.IsUserLoggedIn && Model.UserRole == "Admin")
+                            {
+                                <a href="/Admin/NovelChapters/@Model.Novel.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-cog me-1"></i>Quản lý chương
+                                </a>
+                            }
+                            else if (Model.IsUserLoggedIn && Model.UserRole == "Translator")
+                            {
+                                <a href="/Staff/NovelChapters/@Model.Novel.Id" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit me-1"></i>Biên tập chương
+                                </a>
+                            }
+                        </div>
+
+                        @if (Model.Chapters.Any())
+                        {
+                            <div class="chapters-grid">
+                                @foreach (var chapter in Model.Chapters)
+                                {
+                                    var isPaid = chapter.Price > 0;
+                                    var isLoggedIn = Model.IsUserLoggedIn;
+                                    var userCoins = Model.UserCoins;
+                                    
+                                    // Check if user has purchased this chapter
+                                    var purchasedChaptersJson = ViewContext.HttpContext.Session.GetString("PurchasedChapters");
+                                    var purchasedChapters = new List<string>();
+                                    
+                                    if (!string.IsNullOrEmpty(purchasedChaptersJson))
+                                    {
+                                        purchasedChapters = System.Text.Json.JsonSerializer.Deserialize<List<string>>(purchasedChaptersJson) ?? new List<string>();
+                                    }
+                                    
+                                    var chapterKey = $"{Model.Novel.Id}_{chapter.Number}";
+                                    var hasPurchased = purchasedChapters.Contains(chapterKey);
+                                    
+                                    var isLocked = isPaid && !hasPurchased && (!isLoggedIn || userCoins < chapter.Price);
+                                    var lockClass = isLocked ? "chapter-locked" : "";
+                                    var clickHandler = isLocked ? "" : $"onclick=\"readChapter({chapter.Id}, {Model.Novel.Id}, {chapter.Number})\"";
+                                    
+                                    <div class="chapter-item @lockClass" @Html.Raw(clickHandler)>
+                                        <div class="chapter-number">
+                                            <span class="badge bg-primary">@chapter.Number</span>
+                                        </div>
+                                        <div class="chapter-info">
+                                            <h5 class="chapter-title">
+                                                @if (isLocked)
+                                                {
+                                                    <i class="fas fa-lock text-warning me-2"></i>
+                                                }
+                                                else if (hasPurchased && isPaid)
+                                                {
+                                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                                }
+                                                @chapter.Title
+                                            </h5>
+                                            <div class="chapter-meta">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>@chapter.CreatedAt.ToString("dd/MM/yyyy")
+                                                </small>
+                                                <small class="text-muted ms-3">
+                                                    <i class="fas fa-file-word me-1"></i>@chapter.WordCount.ToString("N0") từ
+                                                </small>
+                                                @if (chapter.Price > 0)
+                                                {
+                                                    <small class="text-warning ms-3">
+                                                        <i class="fas fa-coins me-1"></i>@chapter.Price coins
+                                                        @if (hasPurchased)
+                                                        {
+                                                            <span class="text-success ms-1">(Đã mua)</span>
+                                                        }
+                                                    </small>
+                                                }
+                                            </div>
+                                            @if (chapter.Status != DAL.Entities.ChapterStatus.Published)
+                                            {
+                                                <small class="badge bg-secondary">
+                                                    @(chapter.Status == DAL.Entities.ChapterStatus.Draft ? "Bản nháp" : "Đã lưu trữ")
+                                                </small>
+                                            }
+                                        </div>
+                                        <div class="chapter-action">
+                                            @if (isLocked)
+                                            {
+                                                <i class="fas fa-lock text-warning"></i>
+                                                @if (!Model.IsUserLoggedIn)
+                                                {
+                                                    <small class="text-muted d-block">Đăng nhập để đọc</small>
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-muted d-block">Cần @chapter.Price coins</small>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-chevron-right"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="no-chapters text-center py-5">
+                                <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Chưa có chương nào</h5>
+                                <p class="text-muted">Tiểu thuyết này chưa có chương để đọc.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-exclamation-triangle fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Không tìm thấy tiểu thuyết</h4>
+                <p class="text-muted">Tiểu thuyết bạn đang tìm không tồn tại hoặc đã bị xóa.</p>
+                <a href="/Novels" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại thư viện
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function readChapter(chapterId, novelId, chapterNumber) {
+            // Navigate to chapter reading page
+            window.location.href = `/Chapter/${novelId}/${chapterNumber}`;
+        }
+
+        // Back to top functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for chapter navigation
+            const chapterItems = document.querySelectorAll('.chapter-item');
+            chapterItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        .novel-details-section {
+            padding: 2rem 0;
+            min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .novel-info-card, .novel-description-card, .chapters-list-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid var(--card-border);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .novel-info-card:hover, .novel-description-card:hover, .chapters-list-card:hover {
+            border-color: var(--text-primary);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .novel-cover-container {
+            position: relative;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .novel-cover {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid var(--border-color);
+        }
+
+        .novel-cover-placeholder {
+            width: 100%;
+            max-width: 300px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            margin: 0 auto;
+            border: 2px solid var(--border-color);
+        }
+
+        .novel-status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .novel-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .novel-meta {
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .meta-item:last-child {
+            border-bottom: none;
+        }
+
+        .meta-item strong {
+            color: var(--text-primary);
+        }
+
+        .novel-categories {
+            margin-top: 1rem;
+        }
+
+        .novel-categories strong {
+            color: var(--text-primary);
+        }
+
+        .categories-list {
+            margin-top: 0.5rem;
+        }
+
+        .categories-list .badge {
+            background: var(--bg-tertiary) !important;
+            color: var(--text-secondary) !important;
+            border: 1px solid var(--border-color);
+        }
+
+        .description-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .description-content h3 {
+            color: var(--text-primary);
+        }
+
+        .chapters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chapter-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .chapter-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-primary);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        }
+
+        .chapter-item.chapter-draft {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: rgba(255, 193, 7, 0.3);
+        }
+
+        .chapter-item.chapter-locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .chapter-number {
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .chapter-info {
+            flex-grow: 1;
+        }
+
+        .chapter-title {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chapter-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chapter-meta small {
+            color: var(--text-muted) !important;
+        }
+
+        .chapter-action {
+            margin-left: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .no-chapters {
+            padding: 3rem 0;
+            color: var(--text-muted);
+        }
+
+        .no-chapters i {
+            color: var(--text-muted) !important;
+        }
+
+        .no-chapters h5 {
+            color: var(--text-muted);
+        }
+
+        .no-chapters p {
+            color: var(--text-muted);
+        }
+
+        /* Button styling to match theme */
+        .btn-outline-primary {
+            color: var(--text-primary);
+            border-color: var(--border-color);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--text-secondary);
+            border-color: var(--text-secondary);
+            color: var(--bg-primary);
+        }
+
+        /* Alert styling */
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.1);
+            border-color: rgba(220, 53, 69, 0.3);
+            color: #ff6b6b;
+        }
+
+        /* Badge styling */
+        .badge.bg-success {
+            background: rgba(40, 167, 69, 0.8) !important;
+        }
+
+        .badge.bg-primary {
+            background: rgba(13, 110, 253, 0.8) !important;
+        }
+
+        .badge.bg-warning {
+            background: rgba(255, 193, 7, 0.8) !important;
+            color: var(--bg-primary) !important;
+        }
+
+        .badge.bg-danger {
+            background: rgba(220, 53, 69, 0.8) !important;
+        }
+
+        .badge.bg-secondary {
+            background: var(--bg-tertiary) !important;
+            color: var(--text-secondary) !important;
+            border: 1px solid var(--border-color);
+        }
+
+        .text-warning {
+            color: #ffc107 !important;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Error page styling */
+        .text-center.py-5 {
+            color: var(--text-muted);
+        }
+
+        .text-center.py-5 h4 {
+            color: var(--text-primary);
+        }
+
+        .text-center.py-5 i {
+            color: var(--text-muted) !important;
+        }
+    </style>
+}

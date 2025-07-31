@@ -1,0 +1,462 @@
+@page "{id:int}"
+@model FinalProject.Pages.Staff.EditNovelModel
+@{
+    ViewData["Title"] = "Chỉnh sửa tiểu thuyết";
+    Layout = "_Layout";
+}
+
+<!-- Edit Novel Section -->
+<div class="container-fluid">
+    <!-- Staff Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2>Chỉnh sửa tiểu thuyết</h2>
+                    <p class="text-muted mb-0">Cập nhật thông tin tác phẩm</p>
+                </div>
+                <a asp-page="/Staff/Novels" class="btn btn-secondary">
+                    Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <!-- Form Container -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Thông tin tiểu thuyết</h5>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+                    
+                    <form method="post" enctype="multipart/form-data" action="/Staff/EditNovel/@Model.Novel.Id">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Novel.Id" />
+                        <input type="hidden" asp-for="Novel.CreatedAt" />
+                        
+                        <!-- Basic Information -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                Thông tin cơ bản
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.Title" class="form-label">Tiêu đề *</label>
+                                        <input asp-for="Novel.Title" class="form-control" placeholder="Nhập tiêu đề tiểu thuyết" />
+                                        <span asp-validation-for="Novel.Title" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.Language" class="form-label">Ngôn ngữ</label>
+                                        <select asp-for="Novel.Language" class="form-select">
+                                            <option value="vi">Tiếng Việt</option>
+                                            <option value="en">English</option>
+                                            <option value="zh">中文</option>
+                                            <option value="ja">日本語</option>
+                                            <option value="ko">한국어</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Novel.Description" class="form-label">Mô tả *</label>
+                                <textarea asp-for="Novel.Description" class="form-control" rows="6" 
+                                         placeholder="Nhập mô tả về nội dung tiểu thuyết"></textarea>
+                                <span asp-validation-for="Novel.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Author and Translator -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                Tác giả & Dịch giả
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.AuthorId" class="form-label">Tác giả *</label>
+                                        <select asp-for="Novel.AuthorId" class="form-select">
+                                            <option value="">Chọn tác giả</option>
+                                            @foreach (var author in Model.Authors)
+                                            {
+                                                <option value="@author.Id">@author.FullName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Novel.AuthorId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.TranslatorId" class="form-label">Người dịch</label>
+                                        <select asp-for="Novel.TranslatorId" class="form-select">
+                                            <option value="">Chọn người dịch (tùy chọn)</option>
+                                            @foreach (var translator in Model.Translators)
+                                            {
+                                                <option value="@translator.Id">@translator.FullName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Categories and Tags -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                Phân loại
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Thể loại</label>
+                                <div class="row">
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <div class="col-4 col-6 mb-2">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="SelectedCategoryIds" value="@category.Id" 
+                                                       class="form-check-input" id="category_@category.Id"
+                                                       @(Model.SelectedCategoryIds.Contains(category.Id) ? "checked" : "") />
+                                                <label class="form-check-label" for="category_@category.Id">
+                                                    @category.Name
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Novel.Tags" class="form-label">Tags</label>
+                                <input asp-for="Novel.Tags" class="form-control"
+                                       placeholder="Nhập các từ khóa cách nhau bằng dấu phẩy" />
+                                <div class="form-text">Các từ khóa giúp người đọc tìm kiếm dễ dàng hơn</div>
+                            </div>
+                        </div>
+
+                        <!-- Image and Publication -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                Hình ảnh và xuất bản
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.ImageUrl" class="form-label">URL ảnh bìa</label>
+                                        <input asp-for="Novel.ImageUrl" class="form-control" 
+                                               placeholder="https://example.com/image.jpg" />
+                                        <div class="form-text">Hoặc tải ảnh mới bên dưới</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Tải ảnh mới</label>
+                                        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                                        <div class="form-text">Định dạng: JPG, PNG, GIF. Tối đa 5MB</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="image-preview-container text-center">
+                                        @if (!string.IsNullOrEmpty(Model.Novel.ImageUrl))
+                                        {
+                                            <div id="currentImage">
+                                                <img src="@Model.Novel.ImageUrl" alt="Current Image" class="img-thumbnail" style="max-height: 200px;">
+                                                <p class="text-muted mt-2">Ảnh hiện tại</p>
+                                            </div>
+                                        }
+                                        <div id="imagePreview" class="image-preview d-none">
+                                            <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                                            <p class="text-muted mt-2">Ảnh mới</p>
+                                        </div>
+                                        @if (string.IsNullOrEmpty(Model.Novel.ImageUrl))
+                                        {
+                                            <div id="defaultPreview" class="default-preview p-4 border rounded bg-light">
+                                                <p class="text-muted mb-0">Chưa có ảnh bìa</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.PublishedDate" class="form-label">Ngày xuất bản</label>
+                                        <input asp-for="Novel.PublishedDate" type="date" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label asp-for="Novel.Status" class="form-label">Trạng thái</label>
+                                        <select asp-for="Novel.Status" class="form-select">
+                                            <option value="0">Đang tiến hành</option>
+                                            <option value="1">Hoàn thành</option>
+                                            <option value="2">Tạm dừng</option>
+                                            <option value="3">Bỏ dở</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Source Information -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                Thông tin nguồn
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label asp-for="Novel.OriginalSource" class="form-label">Nguồn gốc</label>
+                                <input asp-for="Novel.OriginalSource" class="form-control" 
+                                       placeholder="URL hoặc thông tin về nguồn gốc tác phẩm" />
+                                <div class="form-text">Thông tin về trang web hoặc nguồn gốc của tác phẩm</div>
+                            </div>
+                        </div>
+
+                        <!-- Novel Stats (Read-only) -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                Thống kê
+                            </h6>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h5 class="mb-1">@Model.Novel.ViewCount.ToString("N0")</h5>
+                                        <small class="text-muted">Lượt xem</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h5 class="mb-1">@Model.Novel.Rating.ToString("F1")</h5>
+                                        <small class="text-muted">Đánh giá (@Model.Novel.RatingCount)</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h5 class="mb-1">@Model.Novel.Chapters.Count</h5>
+                                        <small class="text-muted">Chương</small>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <h5 class="mb-1">@Model.Novel.CreatedAt.ToString("dd/MM/yyyy")</h5>
+                                        <small class="text-muted">Ngày tạo</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-page="/Staff/Novels" class="btn btn-secondary me-md-2">
+                                Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Cập nhật tiểu thuyết
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%) !important;
+        }
+        
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+        }
+        
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .image-preview-container {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .default-preview {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .default-preview:hover {
+            background-color: #e9ecef !important;
+            border-color: #667eea !important;
+        }
+
+        #currentImage img, #imagePreview img {
+            transition: all 0.3s ease;
+        }
+
+        #currentImage img:hover, #imagePreview img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize form animations
+            setTimeout(() => {
+                document.querySelectorAll('.card').forEach((card, index) => {
+                    card.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s both`;
+                });
+            }, 100);
+
+            // Image preview functionality
+            const imageUrlInput = document.querySelector('input[name="Novel.ImageUrl"]');
+            const imageFileInput = document.querySelector('input[name="ImageFile"]');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            const currentImage = document.getElementById('currentImage');
+            const defaultPreview = document.getElementById('defaultPreview');
+
+            // Preview from URL
+            imageUrlInput?.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    showImagePreview(this.value.trim());
+                } else {
+                    resetImagePreview();
+                }
+            });
+
+            // Preview from file
+            imageFileInput?.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        showImagePreview(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    resetImagePreview();
+                }
+            });
+
+            function showImagePreview(src) {
+                if (previewImg) {
+                    previewImg.src = src;
+                    imagePreview?.classList.remove('d-none');
+                    currentImage?.classList.add('d-none');
+                    defaultPreview?.classList.add('d-none');
+                }
+            }
+
+            function resetImagePreview() {
+                if (previewImg) {
+                    previewImg.src = '';
+                    imagePreview?.classList.add('d-none');
+                    
+                    if (currentImage) {
+                        currentImage.classList.remove('d-none');
+                    } else if (defaultPreview) {
+                        defaultPreview.classList.remove('d-none');
+                    }
+                }
+                imageFileInput.value = '';
+            }
+
+            // Form validation enhancements
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const requiredFields = form.querySelectorAll('[required]');
+                    let isValid = true;
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            field.classList.add('is-invalid');
+                            isValid = false;
+                        } else {
+                            field.classList.remove('is-invalid');
+                        }
+                    });
+                    
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Vui lòng điền đầy đủ thông tin bắt buộc.');
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,405 @@
+@page
+@model FinalProject.Pages.Admin.NovelsModel
+@{
+    ViewData["Title"] = "Quản lý Tiểu thuyết";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <!-- Admin Header -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-book text-primary"></i> Quản lý Tiểu thuyết</h2>
+                    <p class="text-muted mb-0">Quản lý tất cả tiểu thuyết trên hệ thống</p>
+                </div>
+                <a asp-page="/Admin/AddNovel" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Thêm tiểu thuyết mới
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-3">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng tiểu thuyết</div>
+                            <div class="h5">@Model.TotalNovels</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-book fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-3">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Hoàn thành</div>
+                            <div class="h5">@Model.CompletedNovels</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Đang tiến hành</div>
+                            <div class="h5">@Model.OngoingNovels</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-edit fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="small text-white-50">Tổng chương</div>
+                            <div class="h5">@Model.TotalChapters</div>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-file-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter and Search Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>Tìm kiếm và lọc</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3 align-items-end">
+                        <!-- Search -->
+                        <div class="col-4">
+                            <label for="SearchTerm" class="form-label">Tìm kiếm</label>
+                            <input asp-for="SearchTerm" class="form-control" placeholder="Tìm theo tên, tác giả...">
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="col-3">
+                            <label for="CategoryId" class="form-label">Thể loại</label>
+                            <select asp-for="CategoryId" class="form-select">
+                                <option value="">Tất cả thể loại</option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Status Filter -->
+                        <div class="col-3">
+                            <label for="Status" class="form-label">Trạng thái</label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="0">Đang tiến hành</option>
+                                <option value="1">Hoàn thành</option>
+                                <option value="2">Tạm dừng</option>
+                                <option value="3">Bỏ dở</option>
+                            </select>
+                        </div>
+
+                        <!-- Search Button -->
+                        <div class="col-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="fas fa-search me-2"></i>Lọc
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novels Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-list me-2"></i>Danh sách tiểu thuyết</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Novels.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Ảnh</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Tác giả</th>
+                                        <th>Thể loại</th>
+                                        <th>Trạng thái</th>
+                                        <th>Chương</th>
+                                        <th>Lượt xem</th>
+                                        <th>Đánh giá</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var novel in Model.Novels)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(novel.ImageUrl))
+                                                {
+                                                    <img src="@novel.ImageUrl" alt="@novel.Title" class="img-thumbnail" style="width: 60px; height: 80px; object-fit: cover;">
+                                                }
+                                                else
+                                                {
+                                                    <div class="text-center text-muted" style="width: 60px; height: 80px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px;">
+                                                        <i class="fas fa-book"></i>
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <h6 class="mb-1">@novel.Title</h6>
+                                                    <small class="text-muted">@novel.ShortDescription</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@novel.AuthorName</strong>
+                                                    @if (!string.IsNullOrEmpty(novel.TranslatorName))
+                                                    {
+                                                        <small class="d-block text-muted">Dịch: @novel.TranslatorName</small>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @foreach (var categoryName in novel.CategoryNames.Take(2))
+                                                {
+                                                    <span class="badge bg-secondary me-1">@categoryName</span>
+                                                }
+                                                @if (novel.CategoryNames.Count > 2)
+                                                {
+                                                    <span class="badge bg-light text-dark">+@(novel.CategoryNames.Count - 2)</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @switch (novel.Status)
+                                                {
+                                                    case DAL.Entities.NovelStatus.Ongoing:
+                                                        <span class="badge bg-warning">Đang TH</span>
+                                                        break;
+                                                    case DAL.Entities.NovelStatus.Completed:
+                                                        <span class="badge bg-success">Hoàn thành</span>
+                                                        break;
+                                                    case DAL.Entities.NovelStatus.Hiatus:
+                                                        <span class="badge bg-secondary">Tạm dừng</span>
+                                                        break;
+                                                    case DAL.Entities.NovelStatus.Dropped:
+                                                        <span class="badge bg-danger">Bỏ dở</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold text-primary">@novel.ChapterCount</span>
+                                            </td>
+                                            <td>
+                                                @novel.ViewCount.ToString("N0")
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <span class="fw-bold text-warning">@novel.Rating.ToString("F1")</span>
+                                                    <small class="text-muted d-block">(@novel.RatingCount)</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @novel.CreatedAt.ToString("dd/MM/yyyy")
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a asp-page="/Admin/NovelDetails" asp-route-id="@novel.Id" 
+                                                       class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a asp-page="/Admin/EditNovel" asp-route-id="@novel.Id" 
+                                                       class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a asp-page="/Admin/NovelChapters" asp-route-novelId="@novel.Id" 
+                                                       class="btn btn-sm btn-outline-success" title="Quản lý chương">
+                                                        <i class="fas fa-list-ol"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                            title="Xóa" onclick="confirmDelete(@novel.Id, '@novel.Title')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                            <h5>Không có tiểu thuyết nào</h5>
+                            <p class="text-muted">Chưa có tiểu thuyết nào trong hệ thống hoặc không tìm thấy kết quả phù hợp.</p>
+                            <a asp-page="/Admin/AddNovel" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Thêm tiểu thuyết đầu tiên
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%) !important;
+        }
+        
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+        }
+        
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .btn-group .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn-group .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Fix column visibility */
+        .table tbody td .text-primary {
+            color: #0d6efd !important;
+        }
+
+        .table tbody td .text-warning {
+            color: #fd7e14 !important;
+        }
+
+        .table tbody td .fw-bold.text-primary {
+            color: #0d6efd !important;
+            font-weight: 700 !important;
+        }
+
+        .table tbody td .fw-bold.text-warning {
+            color: #fd7e14 !important;
+            font-weight: 700 !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function confirmDelete(novelId, novelTitle) {
+            if (confirm(`Bạn có chắc chắn muốn xóa tiểu thuyết "${novelTitle}"?\n\nHành động này sẽ xóa tất cả chương và bình luận liên quan và không thể hoàn tác.`)) {
+                // Create a form to submit the delete request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/Admin/Novels?handler=Delete`;
+                
+                // Add CSRF token
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = '@Html.AntiForgeryToken()'.replace(/&lt;/g,'<').replace(/&gt;/g,'>').match(/value="([^"]+)"/)?.[1] || '';
+                form.appendChild(tokenInput);
+                
+                const idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'id';
+                idInput.value = novelId;
+                form.appendChild(idInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Initialize dashboard-style animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add stagger animation to cards
+            setTimeout(() => {
+                document.querySelectorAll('.card').forEach((card, index) => {
+                    card.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s both`;
+                });
+            }, 100);
+
+            // Add smooth transitions to table rows
+            document.querySelectorAll('table tbody tr').forEach((row, index) => {
+                row.style.animation = `fadeInUp 0.4s ease ${index * 0.05}s both`;
+            });
+        });
+    </script>
+    
+    <!-- Add hidden CSRF token for JS access -->
+    @Html.AntiForgeryToken()
+}
